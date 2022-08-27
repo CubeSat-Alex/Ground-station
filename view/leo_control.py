@@ -20,8 +20,18 @@ class Control(Page):
         centered_frame = Frame(self, bg="white")
         camera_movement_control_frame = Frame(centered_frame, bg="white")
         bottom_frame = Frame(camera_movement_control_frame, bg="white")
+        logo_head_frame = Frame(centered_frame, bg="white")
 
         #         --------- Elements -----------
+
+        self.logo = PhotoImage(file="images/EgsaLogo.png").subsample(2, 2)
+        self.logo_lbl = Label(logo_head_frame, image=self.logo, bg="white")
+        self.dashboard_lbl = Label(logo_head_frame, text="Control", bg="white", font=("Segoe UI", 30, "bold"),
+                                   background="white")
+
+        self.logo_lbl.pack(side="left")
+        self.dashboard_lbl.pack(side="left", expand=1)
+        logo_head_frame.pack(anchor="sw")
 
         joystick = Joystick(camera_movement_control_frame)
         camera_view = CameraView(centered_frame)
@@ -40,7 +50,7 @@ class Control(Page):
 
         #         --------- packing -----------
 
-        centered_frame.pack(anchor="center", expand=1)
+        centered_frame.pack(anchor="center", expand=1, fill="both")
         bottom_frame.pack(side="bottom", pady=30)
 
         camera_view.pack(side="left", padx=20)
@@ -55,7 +65,6 @@ class Control(Page):
         self.angle1_entry.pack(side="left")
         self.angle2_entry.pack(side="left", padx=30)
         go_button.pack(side="left")
-
 
     def go_button_clicked(self):
         pass

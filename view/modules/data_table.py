@@ -3,6 +3,8 @@ from tkinter.ttk import Treeview
 from logic.data import Data
 from tkinter import messagebox
 
+from logic.functions import add_new_line_table
+
 
 class DataTableFrame(Frame):
 
@@ -17,14 +19,16 @@ class DataTableFrame(Frame):
         self.control_button = Button(all_frame, text=" Export to CSV", command=self.export_button_click, relief="flat",
                                      bg="white", activebackground="white")
 
-        Data.data_table['columns'] = ('Time', 'Temperature', 'Pressure', 'Acceleration', 'Angle')
+        Data.data_table['columns'] = ('Time', 'Temperature', 'Pressure', 'Acceleration', 'Angle', 'altitude', 'LDR')
 
         Data.data_table.column("#0", width=0, stretch=NO)
-        Data.data_table.column("Time", anchor=CENTER, width=80)
+        Data.data_table.column("Time", anchor=CENTER, width=130)
         Data.data_table.column("Temperature", anchor=CENTER, width=80)
         Data.data_table.column("Pressure", anchor=CENTER, width=80)
         Data.data_table.column("Acceleration", anchor=CENTER, width=80)
         Data.data_table.column("Angle", anchor=CENTER, width=80)
+        Data.data_table.column("altitude", anchor=CENTER, width=80)
+        Data.data_table.column("LDR", anchor=CENTER, width=80)
 
         Data.data_table.heading("#0", text="", anchor=CENTER)
         Data.data_table.heading("Time", text="Time", anchor=CENTER)
@@ -32,19 +36,22 @@ class DataTableFrame(Frame):
         Data.data_table.heading("Pressure", text="Pressure", anchor=CENTER)
         Data.data_table.heading("Acceleration", text="Acceleration", anchor=CENTER)
         Data.data_table.heading("Angle", text="Angle", anchor=CENTER)
+        Data.data_table.heading("altitude", text="Altitude", anchor=CENTER)
+        Data.data_table.heading("LDR", text="LDR", anchor=CENTER)
 
-        Data.data_table.insert(parent='', index='end', text='',
-                       values=('20:22:23', '20', '1.5', '330', 'x = 30, y = 40'))
-        Data.data_table.insert(parent='', index='end', text='',
-                       values=('20:22:24', '21', '1.2', '323', 'x = 30, y = 40'))
-        Data.data_table.insert(parent='', index='end', text='',
-                       values=('20:22:25', '20', '1.5', '323', 'x = 30, y = 40'))
-        Data.data_table.insert(parent='', index='end', text='',
-                       values=('20:22:26', '21', '1.6', '353', 'x = 30, y = 40'))
-        Data.data_table.insert(parent='', index='end', text='',
-                       values=('20:22:27', '22', '1.5', '300', 'x = 30, y = 40'))
-        Data.data_table.insert(parent='', index='end', text='',
-                       values=('20:22:28', '23', '1.5', '300', 'x = 30, y = 40'))
+        data = Data.dataBase.getData()
+
+        for i in Data.data_table.get_children():
+            Data.data_table.delete(i)
+
+        for i in range(data.shape[0]):
+            line = (data["date"][i], data["tempreture"][i], data["pressure"][i], data["acceleration"][i],
+                    "X: " + str(data["angleX"][i]) + "Y: " + str(data["angleY"][i]) + "Z: " + str(data["angleZ"][i]),
+                    data["altitude"][i],
+                    "F:" + str(data["ldr1"][i]) + "B:" + str(data["ldr2"][i]) + "R:" + str(data["ldr3"][i]) + "L:" + str(data["ldr4"][i]))
+            add_new_line_table(line)
+
+
 
         self.control_button.pack(anchor="se")
         Data.data_table.pack(side="top")

@@ -47,16 +47,19 @@ class SSP:
 
 
     def replaceFundinData(self, data):
+        print("in replace fund")
+        print(data)
         # check if 0xdb 0xdc replace with 0xdb 0xdd
         indexes = [index for (index, item) in enumerate(data) if item == 0xdb]
         for i in indexes:
             if data[i + 1] == 0xdc:
-                var = data[i + 1] == 0xdd
+                data[i + 1] = 0xdd
 
         # check if 0xc0 replace it with 0xdb 0xdc 
         indexes = [index for (index, item) in enumerate(data) if item == 0xc0]
         for i in indexes:
-            var = data[i] == 0xdb
+            print("find c0")
+            data[i] = 0xdb
             data.insert(i+1, 0xdc)
         return data 
 
@@ -64,13 +67,13 @@ class SSP:
         indexes = [index for (index, item) in enumerate(packet) if item == 0xdb]
         for i in indexes:
             if packet[i + 1] == 0xdc:
-                var = packet[i] == 0xc0
+                packet[i] = 0xc0
                 del packet[i+1]
 
         # check if 0xdb 0xdd replace with 0xdb 0xdc
         indexes = [index for (index, item) in enumerate(packet) if item == 0xdb]
         for i in indexes:
             if packet[i + 1] == 0xdd:
-                var = packet[i + 1] == 0xdc
+                packet[i + 1] = 0xdc
 
         return packet

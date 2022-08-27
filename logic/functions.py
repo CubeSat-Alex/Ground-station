@@ -16,27 +16,27 @@ def add_new_line_table(line):
 
 
 def change_temp_figure(data):
-    my_dict = {"Temperature":data}
+    my_dict = {"Temperature": data}
     df = pd.DataFrame(data=my_dict)
-    fig = df.plot.line(figsize=(8, 2), title="Temperature", legend="").get_figure()
-    Data.Temp_Card.plot.figure = fig
-    Data.Temp_Card.plot.draw()
+    fig1 = df.plot.line(figsize=(8, 2), title="Temperature", legend="").get_figure()
+    # Data.Temp_Card.plot.figure.set_figure(fig1)
+    # Data.Temp_Card.plot.draw()
 
 
 def change_pressure_figure(data):
     my_dict = {"Pressure": data}
     df = pd.DataFrame(data=my_dict)
-    fig = df.plot.line(figsize=(8, 2), title="Pressure", legend="").get_figure()
-    Data.pressure_Card.plot.figure = fig
-    Data.pressure_Card.plot.draw()
+    fig2 = df.plot.line(figsize=(8, 2), title="Pressure", legend="").get_figure()
+    # Data.pressure_Card.plot.figure.set_figure(fig2)
+    # Data.pressure_Card.plot.draw()
 
 
 def change_acceleration_figure(data):
     my_dict = {"Acceleration": data}
     df = pd.DataFrame(data=my_dict)
-    fig = df.plot.line(figsize=(8, 2), title="Acceleration", legend="").get_figure()
-    Data.acceleration_Card.plot.figure = fig
-    Data.acceleration_Card.plot.draw()
+    fig3 = df.plot.line(figsize=(8, 2), title="Acceleration", legend="").get_figure()
+    # Data.acceleration_Card.plot.figure.set_figure(fig3)
+    # Data.acceleration_Card.plot.draw()
 
 
 def change_location(long, lat):
@@ -91,14 +91,17 @@ def start_server():
     print(Data.server.connect())
 
 
-def request(order):
+def request(order, duration, atTime, angle):
     data = {
         'order': order,
-        'args': {'duration': 5, 'time': '25/8/22 23:00:10'},
+        'args': {'duration': duration, 'time': atTime, 'angle': angle},
     }
+
     jsonData = json.dumps(data)
+    print(jsonData)
     packet = Data.ssp.data2Packet(jsonData, Address.OBC, Type.Read)
     Data.server.senData(packet)
+    print(packet)
 
 
 def receive_fromOBC():
@@ -125,7 +128,7 @@ def receive_fromOBC():
 
 def capture_thread_clicked():
 
-    request(getImageNow)
+    request(getImageNow, "0", "0", "0")
     path = Data.server.getImage(str(datetime.now().strftime("%d-%m-%Y-%H-%M-%S")))
     Data.current_image = ImageTk.PhotoImage(Image.open(path))
     Data.image_view.config(image=Data.current_image)
@@ -133,13 +136,13 @@ def capture_thread_clicked():
 
 def stream_thread_clicked():
 
-    request(getStream)
+    request(getStream, "0", "0", "0")
     Data.server.getVideo("output/videos/"+str(datetime.now().strftime("%d-%m-%Y-%H-%M-%S")))
 
 
 def get_telemetry():
 
-    request(getTelemetry)
+    request(getTelemetry, "0", "0", "0")
     receive_fromOBC()
 
     Data.dataBase.addData(Data.data_received)
@@ -150,14 +153,16 @@ def get_telemetry():
         Data.data_table.delete(i)
 
     for i in range(data.shape[0]):
-        line = (data["date"][i], data["tempreture"][i], data["pressure"][i], data["acceleration"][i], data["angleX"][i])
+        line = (data["date"][i], data["tempreture"][i], data["pressure"][i], data["acceleration"][i],
+                "X: " + str(data["angleX"][i]) + "Y: " + str(data["angleY"][i]) + "Z: " + str(data["angleZ"][i]),
+                data["altitude"][i],
+                "F:" + str(data["ldr1"][i]) + "B:" + str(data["ldr2"][i]) + "R:" + str(data["ldr3"][i]) + "L:" + str(
+                    data["ldr4"][i]))
         add_new_line_table(line)
 
     last30 = Data.dataBase.getLast30()
 
-    print(last30["pressure"].tolist())
-
-    change_location(last30["lang"].tolist()[0], last30["lat"].tolist()[0])
+    # change_location(last30["lang"].tolist()[0], last30["lat"].tolist()[0])
     change_acceleration_figure(last30["acceleration"].tolist())
     change_pressure_figure(last30["pressure"].tolist())
     change_temp_figure(last30["tempreture"].tolist())
@@ -165,7 +170,7 @@ def get_telemetry():
 
 def get_saved_images():
 
-    request(getImages)
+    request(getImages, "0", "0", "0")
     receive_fromOBC()
 
     print(Data.data_received)
@@ -180,7 +185,7 @@ def get_saved_images():
 
 def get_saved_videos():
 
-    request(getVideos)
+    request(getVideos, "0", "0", "0")
     receive_fromOBC()
 
     print(Data.data_received)
@@ -189,4 +194,11 @@ def get_saved_videos():
         print(name)
 
         Data.server.getVideo("output/videos/"+str(name))
+
+
+def send_command_list():
+
+    for task in Data.command_map:
+        request(task["task"], task["duration"], task["atTime"], task["angle"])
+        time.sleep(0.1)
 

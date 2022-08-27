@@ -1,13 +1,15 @@
 import _thread
 import json
 from tkinter import *
+
+from matplotlib.backends._backend_tk import NavigationToolbar2Tk
 from tkvideo import tkvideo
 from logic import ssp
 from logic.constants import *
 from logic.data import Data
 from logic.orders import *
 from logic.ssp import *
-from view.control import Control
+from view.leo_control import Control
 from view.dashboard import Dashboard
 from view.modules.timer import RepeatedTimer
 from logic.functions import *
@@ -48,7 +50,6 @@ class MainView(Frame):
         Data.data_timer_number_lbl = Label(Data.header_timer_frame, text="5:33", bg="white", font=("Segoe UI", 22, "bold"),
                                     background="#277BC0", foreground="white")
 
-        self.test_button = Button(text="   test button ", command=self.test)
         #         --------- packing -----------
 
         bottom_navigation_bar.pack(side="bottom", fill="x", expand=0)
@@ -65,12 +66,27 @@ class MainView(Frame):
         # self.after(1000, self.counter)
 
         Data.header_timer_frame.place(x=0, y=0)
-        self.test_button.place(x=0, y=0)
+        # self.test_button.place(x=0, y=0)
         Data.data_timer_number_lbl.pack(side="right", expand=1, fill="x")
         Data.data_timer_lbl.pack(side="left")
 
     def dashboard_clicked(self):
         self.p1.lift()
+
+        list = [
+                0.5148329879633158, 0.09603074134407774, 0.2334185652622287, 0.991726555623464, 0.2400938649406048,
+                0.8886339217942552, 0.35463799802475904, 0.19064301191446675, 0.8753111647210065, 0.3459825849600511,
+                0.5148329879633158, 0.09603074134407774, 0.2334185652622287, 0.991726555623464, 0.2400938649406048,
+                0.8886339217942552, 0.35463799802475904, 0.19064301191446675, 0.8753111647210065, 0.3459825849600511,
+                0.5148329879633158, 0.09603074134407774, 0.2334185652622287, 0.991726555623464, 0.2400938649406048]
+
+        Dmy_dict = {"Acceleration": list}
+        df = pd.DataFrame(data=Dmy_dict)
+        fig3 = df.plot.line(figsize=(8, 2), title="Acceleration", legend="").get_figure()
+        Data.plot1.figure = fig3
+        # NavigationToolbar2Tk(Data.acceleration_Card.plot, self)
+        Data.acceleration_Card.plot.draw()
+
         self.dashboard_button.config(bg=color_select)
         self.control_button.config(bg=color_deselect)
 
@@ -79,9 +95,6 @@ class MainView(Frame):
         self.dashboard_button.config(bg=color_deselect)
         self.control_button.config(bg=color_select)
 
-    def test(self):
-        # getImageAt
-        request(getVideoAt)
 
 
 

@@ -7,7 +7,7 @@ from tkintermapview import TkinterMapView
 class Card(Frame):
     title = "value"
     value = "20"
-    graph_data = [20, 30, 40, 30, 40, 50, 120]
+    graph_data = [50, 50, 60, 60]
     plot = None
 
     def __init__(self, title, value, graph_data, *args):
@@ -26,6 +26,7 @@ class Card(Frame):
 
         #         --------- packing -----------
         self.plot.get_tk_widget().pack(side="right")
+
 
 
 class MapCard(Frame):

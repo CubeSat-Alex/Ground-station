@@ -26,5 +26,10 @@ class Data:
     current_image = None
     video_frame = None
     dataBase = None
+    command_list_table = None
     selected_switch = 1
+    command_map = []
+    plot1 = None
+    plot2 = None
+    plot3 = None
 
