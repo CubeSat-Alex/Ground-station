@@ -19,7 +19,7 @@ class CameraView(Frame):
 
         #         --------- Elements -----------
 
-        self.camera_image = PhotoImage(file="images/view_lbl.png").subsample(2, 2)
+        self.camera_image = PhotoImage(file="images/view_lbl.png")
         self.camera_image2 = PhotoImage(file="images/real_view.png").subsample(2, 2)
         Data.image_view = Label(camera_view_frame, image=self.camera_image)
 

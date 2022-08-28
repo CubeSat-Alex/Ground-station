@@ -2,7 +2,6 @@ from tkinter import *
 from tkinter.ttk import Treeview
 from logic.data import Data
 from tkinter import messagebox
-
 from logic.functions import add_new_line_table
 
 
@@ -14,6 +13,9 @@ class DataTableFrame(Frame):
 
         all_frame = Frame(self, background="white")
         all_frame.pack()
+
+        self.empty_space = Label(all_frame, text="0", bg="white", font=("Segoe UI", 30, "bold"), background="white",
+                                 foreground="white")
 
         Data.data_table = Treeview(all_frame, height=60)
         self.control_button = Button(all_frame, text=" Export to CSV", command=self.export_button_click, relief="flat",
@@ -39,8 +41,20 @@ class DataTableFrame(Frame):
         Data.data_table.heading("altitude", text="Altitude", anchor=CENTER)
         Data.data_table.heading("LDR", text="LDR", anchor=CENTER)
 
-        data = Data.dataBase.getData()
+        self.empty_space.pack(anchor="center", pady=10)
+        self.control_button.pack(anchor="se")
+        Data.data_table.pack(side="top")
 
+        self.add_data_to_table()
+
+    def export_button_click(self):
+        Data.dataBase.export()
+        messagebox.showinfo("info", "Data Exported successfully")
+
+    def add_data_to_table(self):
+
+        data = Data.dataBase.getData()
+        # delete rows
         for i in Data.data_table.get_children():
             Data.data_table.delete(i)
 
@@ -48,18 +62,9 @@ class DataTableFrame(Frame):
             line = (data["date"][i], data["tempreture"][i], data["pressure"][i], data["acceleration"][i],
                     "X: " + str(data["angleX"][i]) + "Y: " + str(data["angleY"][i]) + "Z: " + str(data["angleZ"][i]),
                     data["altitude"][i],
-                    "F:" + str(data["ldr1"][i]) + "B:" + str(data["ldr2"][i]) + "R:" + str(data["ldr3"][i]) + "L:" + str(data["ldr4"][i]))
+                    "F:" + str(data["ldr1"][i]) + "B:" + str(data["ldr2"][i]) + "R:" + str(data["ldr3"][i]) + "L:" +
+                    str(data["ldr4"][i]))
             add_new_line_table(line)
-
-
-
-        self.control_button.pack(anchor="se")
-        Data.data_table.pack(side="top")
-
-
-    def export_button_click(self):
-        Data.dataBase.export()
-        messagebox.showinfo("info", "Data Exported successfully")
 
 
 

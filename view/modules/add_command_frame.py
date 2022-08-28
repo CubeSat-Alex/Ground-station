@@ -21,7 +21,7 @@ class CommandsFrame(Frame):
         body_frame = Frame(self, bg="white")
         right_frame = Frame(body_frame, bg="white")
         left_frame = Frame(body_frame, bg="white")
-        table_frame = Frame(right_frame, bg="white",)
+        table_frame = Frame(right_frame, bg="white")
         table_buttons_frame = Frame(right_frame, bg="white")
         add_command_frame = Frame(left_frame, bg="white", width=600, height=250, borderwidth=10, highlightbackground="black", highlightthickness=1,
                        background="white")
@@ -71,8 +71,8 @@ class CommandsFrame(Frame):
         #         --------- packing -----------
 
         body_frame.pack()
-        right_frame.pack(side="right")
-        left_frame.pack(side="right")
+        left_frame.pack(side="top", fill="x")
+        right_frame.pack(side="top", fill="x")
         table_frame.pack(side="top")
         table_buttons_frame.pack(side="top")
         add_command_frame.pack(side="top", ipady=10)

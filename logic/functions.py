@@ -19,24 +19,24 @@ def change_temp_figure(data):
     my_dict = {"Temperature": data}
     df = pd.DataFrame(data=my_dict)
     fig1 = df.plot.line(figsize=(8, 2), title="Temperature", legend="").get_figure()
-    # Data.Temp_Card.plot.figure.set_figure(fig1)
-    # Data.Temp_Card.plot.draw()
+    Data.Temp_Card.plot.figure = fig1
+    Data.Temp_Card.plot.draw()
 
 
 def change_pressure_figure(data):
     my_dict = {"Pressure": data}
     df = pd.DataFrame(data=my_dict)
     fig2 = df.plot.line(figsize=(8, 2), title="Pressure", legend="").get_figure()
-    # Data.pressure_Card.plot.figure.set_figure(fig2)
-    # Data.pressure_Card.plot.draw()
+    Data.pressure_Card.plot.figure = fig2
+    Data.pressure_Card.plot.draw()
 
 
 def change_acceleration_figure(data):
     my_dict = {"Acceleration": data}
     df = pd.DataFrame(data=my_dict)
     fig3 = df.plot.line(figsize=(8, 2), title="Acceleration", legend="").get_figure()
-    # Data.acceleration_Card.plot.figure.set_figure(fig3)
-    # Data.acceleration_Card.plot.draw()
+    Data.acceleration_Card.plot.figure = fig3
+    Data.acceleration_Card.plot.draw()
 
 
 def change_location(long, lat):
@@ -137,7 +137,7 @@ def capture_thread_clicked():
 def stream_thread_clicked():
 
     request(getStream, "0", "0", "0")
-    Data.server.getVideo("output/videos/"+str(datetime.now().strftime("%d-%m-%Y-%H-%M-%S")))
+    Data.server.getVideo("output/videos/"+str(datetime.now().strftime("%d_%m_%Y %H-%M-%S") + ".avi"))
 
 
 def get_telemetry():
@@ -191,8 +191,6 @@ def get_saved_videos():
     print(Data.data_received)
     maap = json.loads(Data.data_received)
     for name in maap["VideosNames"]:
-        print(name)
-
         Data.server.getVideo("output/videos/"+str(name))
 
 

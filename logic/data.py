@@ -6,6 +6,7 @@ class Data:
     data_timer_number_lbl = None
     header_timer_frame = None
     data_table_frame = None
+    files_table = None
     data_table = None
     Temp_Card = None
     pressure_Card = None

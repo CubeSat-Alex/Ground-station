@@ -1,6 +1,6 @@
 import datetime
 from tkinter import *
-from tktimepicker import AnalogPicker, constants
+from tktimepicker import AnalogPicker, constants, SpinTimePickerModern
 from logic.data import Data
 from logic.functions import *
 
@@ -46,7 +46,7 @@ class SessionPeriodFrame(Frame):
     def from_button_clicked(self):
         self.top = Toplevel()
         self.top.title("Time picker")
-        self.time_picker = AnalogPicker(self.top, type=constants.HOURS24)
+        self.time_picker = SpinTimePickerModern(self.top)
         self.time_picker.pack(expand=True, fill="both", pady=20, padx=20)
 
         ok_btn = Button(self.top, text="Set", command=self.update_time_from_button, bg="black",

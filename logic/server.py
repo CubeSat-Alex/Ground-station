@@ -41,7 +41,7 @@ class Server:
         data = b""
         payload_size = struct.calcsize("Q")
         fourcc = Data.cv.VideoWriter_fourcc(*'XVID')
-        out = Data.cv.VideoWriter(fileName + ".avi", fourcc, 24.0, (320, 240))
+        out = Data.cv.VideoWriter(fileName, fourcc, 24.0, (320, 240))
 
         # canvas = Canvas(Data.video_frame, width=320, height=240)
         # self.image_on_canvas = canvas.create_image(0, 0, anchor="nw")
