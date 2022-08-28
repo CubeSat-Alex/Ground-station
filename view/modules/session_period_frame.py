@@ -1,7 +1,5 @@
 import datetime
 from tkinter import *
-from tktimepicker import AnalogPicker, constants, SpinTimePickerModern
-from logic.data import Data
 from logic.functions import *
 
 
@@ -15,8 +13,11 @@ class SessionPeriodFrame(Frame):
         self.time_picker = None
         header_frame = Frame(self, bg="white")
         bottom_frame = Frame(self, bg="white")
+        button_frame = Frame(self, bg="white")
         from_frame = Frame(bottom_frame, bg="white")
+        entry_from_frame = Frame(from_frame, bg="white")
         to_frame = Frame(bottom_frame, bg="white")
+        entry_to_frame = Frame(to_frame, bg="white")
 
         #         --------- elements -----------
 
@@ -24,54 +25,69 @@ class SessionPeriodFrame(Frame):
         from_lbl = Label(from_frame, text="From", bg="white", font=("Segoe UI", 18))
         to_lbl = Label(to_frame, text="To", bg="white", font=("Segoe UI", 18))
 
-        self.from_button = Button(from_frame, text="12:7:00", command=self.from_button_clicked, relief="flat", bg="white",
-                             activebackground="white", font=("Segoe UI", 18), foreground="#0ba9bc")
+        self.entry_from_hours = Entry(entry_from_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
+                                      width=2)
 
-        self.to_button = Button(to_frame, text="12:8:00", command=self.to_button_clicked, relief="flat", bg="white",
-                           activebackground="white", font=("Segoe UI", 18), foreground="#0ba9bc")
+        self.entry_from_minutes = Entry(entry_from_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
+                                        width=2)
+        self.entry_from_seconds = Entry(entry_from_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
+                                        width=2)
+
+        self.entry_to_hours = Entry(entry_to_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
+                                    width=2)
+        self.entry_to_minutes = Entry(entry_to_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
+                                      width=2)
+        self.entry_to_seconds = Entry(entry_to_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
+                                      width=2)
+
+        self.change_session_button = Button(button_frame, text="Apply", command=self.apply_button_clicked,
+                                            relief="flat",
+                                            bg="white", activebackground="white", font=("Segoe UI", 18),
+                                            foreground="#0ba9bc")
 
         #         --------- packing -----------
 
         header_frame.pack(side="top")
         bottom_frame.pack(side="top")
-        from_frame.pack(side="left")
-        to_frame.pack(side="left")
+        from_frame.pack(side="top")
+        to_frame.pack(side="top")
+        button_frame.pack(side="top")
 
         header_lbl.pack(anchor="center", expand=1)
         from_lbl.pack(side="top")
         to_lbl.pack(side="top")
-        self.from_button.pack(side="top", padx=5)
-        self.to_button.pack(side="top", padx=5)
 
-    def from_button_clicked(self):
-        self.top = Toplevel()
-        self.top.title("Time picker")
-        self.time_picker = SpinTimePickerModern(self.top)
-        self.time_picker.pack(expand=True, fill="both", pady=20, padx=20)
+        self.entry_from_hours.pack(side="left", padx=5)
+        Label(entry_from_frame, text=":", bg="white", font=("Segoe UI", 18), foreground="#0ba9bc").pack(side="left")
+        self.entry_from_minutes.pack(side="left", padx=5)
+        Label(entry_from_frame, text=":", bg="white", font=("Segoe UI", 18), foreground="#0ba9bc").pack(side="left")
+        self.entry_from_seconds.pack(side="left", padx=5)
 
-        ok_btn = Button(self.top, text="Set", command=self.update_time_from_button, bg="black",
-                        font=("Courier", 14, "bold"), foreground="white", relief="flat")
-        ok_btn.pack(ipadx=80)
+        self.entry_to_hours.pack(side="left", padx=5)
+        Label(entry_to_frame, text=":", bg="white", font=("Segoe UI", 18), foreground="#0ba9bc").pack(side="left")
+        self.entry_to_minutes.pack(side="left", padx=5)
+        Label(entry_to_frame, text=":", bg="white", font=("Segoe UI", 18), foreground="#0ba9bc").pack(side="left")
+        self.entry_to_seconds.pack(side="left", padx=5)
 
-    def update_time_from_button(self):
-        Data.start_session_time = datetime(2022, 8, 24, self.time_picker.time()[0], self.time_picker.time()[1], 0)
-        text = Data.start_session_time.strftime("%H:%M:%S")
-        self.from_button.configure(text=text)
-        self.top.destroy()
+        self.change_session_button.pack(side="top", padx=5)
 
-    def to_button_clicked(self):
-        self.top = Toplevel()
-        self.top.title("Time picker")
-        self.time_picker = AnalogPicker(self.top, type=constants.HOURS24)
-        self.time_picker.pack(expand=True, fill="both", pady=20, padx=20)
-        ok_btn = Button(self.top, text="Set", command=self.update_time_to_button, bg="black",
-                        font=("Courier", 14, "bold"), foreground="white", relief="flat")
-        ok_btn.pack(ipadx=80)
+        entry_from_frame.pack(side="top")
+        entry_to_frame.pack(side="top")
 
-    def update_time_to_button(self):
-        temp = self.time_picker.time()[0]
-        Data.end_session_time = datetime(2022, 8, 24, temp, self.time_picker.time()[1], 0)
-        text = Data.end_session_time.strftime("%H:%M:%S")
-        self.to_button.configure(text=text)
-        self.top.destroy()
+        self.entry_from_hours.insert(0, Data.start_session_time.hour)
+        self.entry_from_minutes.insert(0, Data.start_session_time.minute)
+        self.entry_from_seconds.insert(0, Data.start_session_time.second)
+        self.entry_to_hours.insert(0, Data.end_session_time.hour)
+        self.entry_to_minutes.insert(0, Data.end_session_time.minute)
+        self.entry_to_seconds.insert(0, Data.end_session_time.second)
 
+    def apply_button_clicked(self):
+        Data.start_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day,
+                                           int(self.entry_from_hours.get()),
+                                           int(self.entry_from_minutes.get()),
+                                           int(self.entry_from_seconds.get()))
+
+        Data.end_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day,
+                                         int(self.entry_to_hours.get()),
+                                         int(self.entry_to_minutes.get()),
+                                         int(self.entry_to_seconds.get()))

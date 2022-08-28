@@ -15,20 +15,23 @@ class Control(Page):
 
         #         --------- Frames -----------
         centered_frame = Frame(self, bg="white")
+        right_frame = Frame(self, bg="white")
+        left_frame = Frame(self, bg="white")
 
         #         --------- Elements -----------
 
-        session_period_frame = SessionPeriodFrame(self)
-        request_data_frame = RequestDataFrame(centered_frame)
+        session_period_frame = SessionPeriodFrame(left_frame) #
+        request_data_frame = RequestDataFrame(right_frame) #
         command_frame = CommandsFrame(centered_frame)
-        files_table_frame = FilesTableFrame(centered_frame)
+        files_table_frame = FilesTableFrame(right_frame) #
 
         #         --------- packing -----------
+        right_frame.pack(side="right")
+        left_frame.pack(side="left", fill="y")
+        centered_frame.pack(side="left")
 
-        centered_frame.pack(anchor="center", expand=1, fill="both")
-
-        request_data_frame.pack(side="right", padx=100)
-        session_period_frame.pack(anchor="sw")
-        command_frame.pack(side="bottom")
-        files_table_frame.pack(side="right")
+        command_frame.pack(side="top")
+        session_period_frame.pack(side="bottom", padx=40)
+        request_data_frame.pack(side="top")
+        files_table_frame.pack(side="top")
 

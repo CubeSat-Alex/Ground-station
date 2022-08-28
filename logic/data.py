@@ -13,11 +13,12 @@ class Data:
     acceleration_Card = None
     Map = None
     root = None
-    start_session_time = datetime(2022, 8, 24, 12, 7, 00)
-    end_session_time = datetime(2022, 8, 24, 12, 8, 00)
+    start_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 12, 7, 00)
+    end_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 12, 10, 00)
     duration_until_bext_session = timedelta(20, 20, 20)
     repeater_session = None
-    execution_time = datetime(2022, 8, 24, 4, 12, 00)
+    execution_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, datetime.now().hour,
+                              datetime.now().minute, datetime.now().second)
     server = None
     ssp = None
     received_flag = False

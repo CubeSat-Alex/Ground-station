@@ -28,8 +28,3 @@ class RepeatedTimer(object):
     def stop(self):
         self._timer.cancel()
         self.is_running = False
-
-
-# x = threading.Thread(target=thread_function, args=(index,))
-#         threads.append(x)
-# x.start()

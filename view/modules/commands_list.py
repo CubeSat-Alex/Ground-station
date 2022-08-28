@@ -11,7 +11,7 @@ class CommandsListFrame(Frame):
                        background="white")
 
         table_frame = Frame(self)
-        table_frame.pack()
+        table_frame.pack(fill="both", expand=1)
 
         Data.command_list_table = Treeview(table_frame)
 
@@ -33,7 +33,7 @@ class CommandsListFrame(Frame):
 
         # Data.command_list_table.insert(parent='', index='end', text='', values=('1', 'take image', '30,45', '0', '14:30:00'))
 
-        Data.command_list_table.pack()
+        Data.command_list_table.pack(fill="both", expand=1)
 
 
 
