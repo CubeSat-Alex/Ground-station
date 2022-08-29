@@ -1,9 +1,6 @@
 import _thread
-import datetime
 from tkinter import *
-from tktimepicker import AnalogPicker, constants
-from logic.data import Data
-from logic.functions import *
+from logic.functions.general import *
 
 
 class RequestDataFrame(Frame):

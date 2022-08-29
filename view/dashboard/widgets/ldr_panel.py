@@ -1,5 +1,5 @@
 from tkinter import *
-from logic.functions import *
+from logic.functions.general import *
 import numpy as np
 
 

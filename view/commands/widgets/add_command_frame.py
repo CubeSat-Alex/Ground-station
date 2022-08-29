@@ -1,7 +1,7 @@
 import _thread
 from tkinter import *
-from logic.functions import *
-from view.modules.commands_list import CommandsListFrame
+from logic.functions.general import *
+from view.commands.widgets.commands_list import CommandsListFrame
 
 
 class CommandsFrame(Frame):

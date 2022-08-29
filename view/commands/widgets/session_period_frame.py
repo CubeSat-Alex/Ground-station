@@ -1,6 +1,5 @@
-import datetime
 from tkinter import *
-from logic.functions import *
+from logic.functions.general import *
 
 
 class SessionPeriodFrame(Frame):

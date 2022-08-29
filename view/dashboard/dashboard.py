@@ -1,8 +1,9 @@
 from tkinter import *
-from logic.functions import *
-from view.modules.data_table import DataTableFrame
-from view.modules.page import Page
-from view.modules.card import Card, MapCard
+from logic.functions.figures import *
+from logic.functions.general import *
+from view.dashboard.widgets.data_table import DataTableFrame
+from model.page import Page
+from view.dashboard.widgets.card import Card, MapCard
 
 
 class Dashboard(Page):

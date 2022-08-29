@@ -1,9 +1,6 @@
-from datetime import datetime
 from tkinter import *
 from tkinter.ttk import Treeview, Style
-from logic.data import Data
-from tkinter import messagebox
-from logic.functions import *
+from logic.functions.general import *
 from tkvideo import tkvideo
 
 

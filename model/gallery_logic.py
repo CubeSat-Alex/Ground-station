@@ -1,7 +1,6 @@
 import os
 import enum
 import datetime
-from logic.data import Data
 
 imageFolder = "output\\images"
 videosFolder = "output\\videos"

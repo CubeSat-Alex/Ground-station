@@ -1,7 +1,7 @@
 from tkinter import *
-from logic.functions import *
+from logic.functions.general import *
 import numpy as np
-from datetime import datetime, timedelta
+from datetime import datetime
 
 
 class SatelliteOrbit(Frame):

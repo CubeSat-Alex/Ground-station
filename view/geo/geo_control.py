@@ -1,6 +1,6 @@
 from tkinter import *
-from view.modules.camera_view import CameraView
-from view.modules.page import Page
+from view.geo.widgets.camera_view import CameraView
+from model.page import Page
 
 
 class GEOControl(Page):
@@ -13,8 +13,8 @@ class GEOControl(Page):
         #         --------- Frames -----------
         # logo_head_frame = Frame(bg="white")
         centered_frame = Frame(self, bg="white")
-        camera_movement_control_frame = Frame(centered_frame, bg="white")
-        bottom_frame = Frame(camera_movement_control_frame, bg="white")
+        # camera_movement_control_frame = Frame(centered_frame, bg="white")
+        # bottom_frame = Frame(camera_movement_control_frame, bg="white")
 
         #         --------- Elements -----------
         #
@@ -45,10 +45,10 @@ class GEOControl(Page):
         #         --------- packing -----------
 
         centered_frame.pack(anchor="center", expand=1)
-        bottom_frame.pack(side="bottom", pady=30)
+        # bottom_frame.pack(side="bottom", pady=30)
 
         camera_view.pack(side="left", padx=20)
-        camera_movement_control_frame.pack(side="left", padx=80)
+        # camera_movement_control_frame.pack(side="left", padx=80)
         # joystick.pack(side="left")
         # save_position_widget.pack(side="left", padx=50)
         # # session_period_frame.pack()

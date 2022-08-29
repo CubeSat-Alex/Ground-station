@@ -1,10 +1,10 @@
 from tkinter import *
-from view.modules.add_command_frame import CommandsFrame
-from view.modules.files_table import FilesTableFrame
-from view.modules.page import Page
-from view.modules.request_data_frame import RequestDataFrame
-from view.modules.satellite_orbit import SatelliteOrbit
-from view.modules.session_period_frame import SessionPeriodFrame
+from view.commands.widgets.add_command_frame import CommandsFrame
+from view.commands.widgets.files_table import FilesTableFrame
+from model.page import Page
+from view.commands.widgets.request_data_frame import RequestDataFrame
+from view.dashboard.widgets.satellite_orbit import SatelliteOrbit
+from view.commands.widgets.session_period_frame import SessionPeriodFrame
 
 
 class Control(Page):

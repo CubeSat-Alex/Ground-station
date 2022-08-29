@@ -1,10 +1,13 @@
 from tkinter import *
-from logic.constants import *
-from view.geo_control import GEOControl
-from view.leo_control import Control
-from view.dashboard import Dashboard
-from view.modules.timer import RepeatedTimer
-from logic.functions import *
+from logic.constant.constants import *
+from logic.data import Data
+from logic.functions.general import change_text_lbl
+from model.timer import RepeatedTimer
+from view.downloads.downloads import DownloadsPage
+from view.geo.geo_control import GEOControl
+from view.commands.leo_control import Control
+from view.dashboard.dashboard import Dashboard
+from view.logs.logs_page import LogsPage
 
 
 class MainView(Frame):
@@ -16,8 +19,8 @@ class MainView(Frame):
         self.p1 = Dashboard(self)
         self.p2 = Control(self)
         self.p3 = GEOControl(self)
-        self.counter_num = 0
-        Data.repeater_session = RepeatedTimer(1, change_text_lbl)
+        self.p4 = DownloadsPage(self)
+        self.p5 = LogsPage(self)
 
         #         --------- Frames -----------
 
@@ -42,13 +45,23 @@ class MainView(Frame):
         self.control_button = Button(button_frame, text="    LEO Control", command=self.control_clicked, relief="flat",
                                      image=self.control, compound="left", bg=color_background, activebackground="white")
         self.geo_control_button = Button(button_frame, text="    GEO Control", command=self.geo_control_clicked,
-                                         relief="flat", image=self.control, compound="left", bg=color_background, activebackground="white")
+                                         relief="flat", image=self.control, compound="left", bg=color_background,
+                                         activebackground="white")
+
+        self.downloads_button = Button(button_frame, text="    GEO Control", command=self.geo_control_clicked,
+                                         relief="flat", image=self.control, compound="left", bg=color_background,
+                                         activebackground="white")
+
+        self.logs_button = Button(button_frame, text="    GEO Control", command=self.geo_control_clicked,
+                                         relief="flat", image=self.control, compound="left", bg=color_background,
+                                         activebackground="white")
 
         Data.data_timer_lbl = Label(Data.header_timer_frame, text="the next update will be after", bg="white",
                                font=("Segoe UI", 14), background="#277BC0", foreground="white")
 
-        Data.data_timer_number_lbl = Label(Data.header_timer_frame, text="5:33", bg="white", font=("Segoe UI", 22, "bold"),
-                                    background="#277BC0", foreground="white")
+        Data.data_timer_number_lbl = Label(Data.header_timer_frame, text="5:33", bg="white", font=("Segoe UI", 22,
+                                                                                                   "bold"),
+                                           background="#277BC0", foreground="white")
 
         #         --------- packing -----------
 
@@ -59,12 +72,17 @@ class MainView(Frame):
         self.p1.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
         self.p2.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
         self.p3.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+        self.p4.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
+        self.p5.place(in_=container, x=0, y=0, relwidth=1, relheight=1)
 
         self.dashboard_button.pack(side="left", ipadx=20, ipady=10)
         self.control_button.pack(side="left", ipadx=20, ipady=10)
         self.geo_control_button.pack(side="left", ipadx=20, ipady=10)
+        self.downloads_button.pack(side="left", ipadx=20, ipady=10)
+        self.logs_button.pack(side="left", ipadx=20, ipady=10)
 
         self.p1.show()
+        Data.repeater_session = RepeatedTimer(1, change_text_lbl)
 
         Data.header_timer_frame.place(x=0, y=0)
         Data.data_timer_number_lbl.pack(side="right", expand=1, fill="x")
@@ -72,23 +90,37 @@ class MainView(Frame):
 
         self.logo_lbl.place(x=20, y=5)
 
-    def dashboard_clicked(self):
-        self.p1.lift()
-        self.dashboard_button.config(bg=color_select)
+    def clear_button_color(self):
+        self.dashboard_button.config(bg=color_deselect)
         self.control_button.config(bg=color_deselect)
         self.geo_control_button.config(bg=color_deselect)
+        self.downloads_button.config(bg=color_deselect)
+        self.logs_button.config(bg=color_deselect)
+
+    def dashboard_clicked(self):
+        self.p1.lift()
+        self.clear_button_color()
+        self.dashboard_button.config(bg=color_select)
 
     def control_clicked(self):
         self.p2.lift()
-        self.dashboard_button.config(bg=color_deselect)
+        self.clear_button_color()
         self.control_button.config(bg=color_select)
-        self.geo_control_button.config(bg=color_deselect)
 
     def geo_control_clicked(self):
         self.p3.lift()
-        self.dashboard_button.config(bg=color_deselect)
-        self.control_button.config(bg=color_deselect)
+        self.clear_button_color()
         self.geo_control_button.config(bg=color_select)
+
+    def logs_page_clicked(self):
+        self.p5.lift()
+        self.clear_button_color()
+        self.logs_button.config(bg=color_select)
+
+    def download_clicked(self):
+        self.p4.lift()
+        self.clear_button_color()
+        self.downloads_button.config(bg=color_select)
 
 
 

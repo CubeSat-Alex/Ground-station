@@ -1,11 +1,9 @@
 import _thread
-import json
 from tkinter import *
-from logic.data import Data
-from logic.functions import *
-from logic.orders import *
-from logic.ssp import *
-from view.modules.gif import GifPlay
+from logic.functions.general import *
+from logic.constant.orders import *
+from model.ssp import *
+from model.gif import GifPlay
 
 
 class CameraView(Frame):
@@ -15,7 +13,7 @@ class CameraView(Frame):
 
         camera_view_frame = Frame(self, bg="white")
         camera_view_buttons_frame = Frame(camera_view_frame, bg="white")
-        Data.video_frame = Frame(camera_view_frame, bg="white")
+        # Data.video_frame = Frame(camera_view_frame, bg="white")
 
         #         --------- Elements -----------
 
@@ -34,9 +32,9 @@ class CameraView(Frame):
         capture_image_button = Button(camera_view_buttons_frame, text="   Capture", image=self.camera_icon, compound="left",
                                             relief="flat", command=self.capture_button_clicked)
 
-        phone_image_button = Button(camera_view_buttons_frame, text="   phone stream", image=self.camera_icon,
-                                      compound="left",
-                                      relief="flat", command=self.start_phone_button_clicked)
+        # phone_image_button = Button(camera_view_buttons_frame, text="   phone stream", image=self.camera_icon,
+        #                               compound="left",
+        #                               relief="flat", command=self.start_phone_button_clicked)
 
         #         --------- packing -----------
 
@@ -46,14 +44,15 @@ class CameraView(Frame):
         start_streem_button.pack(side="left", pady=10, ipadx=30, ipady=10)
         stop_streem_button.pack(side="left", pady=10, ipadx=30, ipady=10)
         capture_image_button.pack(side="left", pady=10, ipadx=30, ipady=10)
-        phone_image_button.pack(side="left", pady=10, ipadx=30, ipady=10)
+        # phone_image_button.pack(side="left", pady=10, ipadx=30, ipady=10)
 
         Data.image_view.pack(side="top")
-        Data.video_frame.pack(side="top")
+        # Data.video_frame.pack(side="top")
 
         #         --------- start run -----------
 
-        self.gif = GifPlay(Data.image_view, 'images/gif.gif', 0.1)
+        self.gif = GifPlay(Data.image_view, 'images/satelite_motion.gif', 0.1)
+        self.gif.start()
 
     def start_button_clicked(self):
         # self.gif.start()

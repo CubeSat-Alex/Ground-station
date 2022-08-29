@@ -2,7 +2,7 @@ from tkinter import *
 from tkinter.ttk import Treeview
 from logic.data import Data
 from tkinter import messagebox
-from logic.functions import add_new_line_table
+from logic.functions.general import add_new_line_table
 
 
 class DataTableFrame(Frame):
