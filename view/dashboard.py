@@ -23,7 +23,7 @@ class Dashboard(Page):
         Data.Temp_Card = Card("Temperature", "22.5 C", [1.5, 1.2, 1.5, 1.6, 1.5], cards_frame)
         Data.pressure_Card = Card("Pressure", "66 F",         [1.5, 1.2, 1.5, 1.6, 1.5], cards_frame)
         Data.acceleration_Card = Card("Acceleration", "22.5", [330, 323, 323, 353, 300], cards_frame)
-        # Data.Map = MapCard(30.057236, 31.323368, self)
+        Data.Map = MapCard(30.057236, 31.323368, self)
 
         last30 = Data.dataBase.getLast30()
 
@@ -43,7 +43,7 @@ class Dashboard(Page):
         Data.pressure_Card.grid(row=1, column=0, padx=10, pady=10)
         Data.acceleration_Card.grid(row=2, column=0, padx=10, pady=10)
 
-        # Data.Map.pack(side="right", padx=10, pady=10, fill="y")
+        Data.Map.pack(side="right", padx=10, pady=10, fill="y")
 
 
 

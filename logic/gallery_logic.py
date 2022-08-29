@@ -1,19 +1,20 @@
 import os
 import enum
 import datetime
+from logic.data import Data
 
 imageFolder = "output\\images"
 videosFolder = "output\\videos"
 
 
 def getAllNames(path):
-    isExist = os.path.exists(path)
-    print(isExist)
+    path2 = os.getcwd() + "\\" + path
+    isExist = os.path.exists(path2)
     names = []
     if isExist:
-        files_in_dir = os.listdir(path)
+        files_in_dir = os.listdir(path2)
         for file in files_in_dir:
-            names.append(GalleryFile(file, path))
+            names.append(GalleryFile(file, path2))
     return names
 
 
@@ -44,3 +45,6 @@ class SortType(enum.Enum):
     date = 0
     mission = 1
     duration = 2
+
+
+

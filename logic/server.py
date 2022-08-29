@@ -41,15 +41,11 @@ class Server:
         data = b""
         payload_size = struct.calcsize("Q")
         fourcc = Data.cv.VideoWriter_fourcc(*'XVID')
-        out = Data.cv.VideoWriter(fileName, fourcc, 24.0, (320, 240))
+        # out = Data.cv.VideoWriter(fileName, fourcc, 24.0, (320, 240))
 
-        # canvas = Canvas(Data.video_frame, width=320, height=240)
-        # self.image_on_canvas = canvas.create_image(0, 0, anchor="nw")
-        # canvas.pack()
-        print(datetime.now())
         while True:
             while len(data) < payload_size:
-                packet = self.client.recv(4 * 1024)  # 4K
+                packet = self.client.recv(64 * 1024)  # 4K
                 if not packet: break
                 data += packet
             packed_msg_size = data[:payload_size]
@@ -57,28 +53,27 @@ class Server:
             msg_size = struct.unpack("Q", packed_msg_size)[0]
 
             while len(data) < msg_size:
-                newData = self.client.recv(4 * 1024)
+                newData = self.client.recv(64 * 1024)
                 data += newData
 
             frame_data = data[:msg_size]
             data = data[msg_size:]
             if len(data) < payload_size:
-                print("here")
-                out.release()
-                Data.cv.destroyAllWindows()
+                # print("here")
+                # out.release()
+                # Data.cv.destroyAllWindows()
                 break
 
             # frame = Data.cv.cvtColor(pickle.loads(frame_data), Data.cv.COLOR_BGR2RGB)
             frame = pickle.loads(frame_data)
 
-            out.write(frame)
+            # out.write(frame)
 
             # self.photo = ImageTk.PhotoImage(image=Image.fromarray(frame))
             # canvas.itemconfig(self.image_on_canvas, image=self.photo)
 
             Data.cv.imshow("RECEIVING VIDEO", frame)
             Data.cv.waitKey(1)
-
 
     def getImage(self, name):
         data = b""

@@ -2,12 +2,13 @@ import json
 import pandas as pd
 from PIL import ImageTk, Image
 from logic.data import Data
-from datetime import *
 from tkinter import messagebox, PhotoImage
 import time
+from logic.gallery_logic import *
 from logic.orders import *
 from logic.server import Server
 from logic.ssp import *
+from datetime import datetime
 
 
 def add_new_line_table(line):
@@ -91,10 +92,10 @@ def start_server():
     print(Data.server.connect())
 
 
-def request(order, duration, atTime, angle):
+def request(order, duration, atTime, angle, name):
     data = {
         'order': order,
-        'args': {'duration': duration, 'time': atTime, 'angle': angle},
+        'args': {'duration': duration, 'time': atTime, 'angle': angle, 'mission': name},
     }
 
     jsonData = json.dumps(data)
@@ -128,7 +129,7 @@ def receive_fromOBC():
 
 def capture_thread_clicked():
 
-    request(getImageNow, "0", "0", "0")
+    request(getImageNow, "0", "0", "0", "none")
     path = Data.server.getImage(str(datetime.now().strftime("%d-%m-%Y-%H-%M-%S")))
     Data.current_image = ImageTk.PhotoImage(Image.open(path))
     Data.image_view.config(image=Data.current_image)
@@ -136,13 +137,17 @@ def capture_thread_clicked():
 
 def stream_thread_clicked():
 
-    request(getStream, "0", "0", "0")
+    request(getStream, "0", "0", "0", "none")
     Data.server.getVideo("output/videos/"+str(datetime.now().strftime("%d_%m_%Y %H-%M-%S") + ".avi"))
 
+def stream_phone_thread_clicked():
+
+    request('z', "0", "0", "0", "none")
+    Data.server.getVideo("output/videos/"+str(datetime.now().strftime("%d_%m_%Y %H-%M-%S") + ".avi"))
 
 def get_telemetry():
 
-    request(getTelemetry, "0", "0", "0")
+    request(getTelemetry, "0", "0", "0", "none")
     receive_fromOBC()
 
     Data.dataBase.addData(Data.data_received)
@@ -170,7 +175,7 @@ def get_telemetry():
 
 def get_saved_images():
 
-    request(getImages, "0", "0", "0")
+    request(getImages, "0", "0", "0", 'none')
     receive_fromOBC()
 
     print(Data.data_received)
@@ -185,7 +190,7 @@ def get_saved_images():
 
 def get_saved_videos():
 
-    request(getVideos, "0", "0", "0")
+    request(getVideos, "0", "0", "0", "none")
     receive_fromOBC()
 
     print(Data.data_received)
@@ -197,6 +202,12 @@ def get_saved_videos():
 def send_command_list():
 
     for task in Data.command_map:
-        request(task["task"], task["duration"], task["atTime"], task["angle"])
+        request(task["task"], task["duration"], task["atTime"], task["angle"], task["name"])
         time.sleep(0.1)
 
+
+def initial_files():
+    videos = getAllNames(videosFolder)
+    images = getAllNames(imageFolder)
+    Data.files = images + videos
+    # all = sortGallery(all, SortType.mission)

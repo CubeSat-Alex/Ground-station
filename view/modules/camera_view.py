@@ -34,6 +34,10 @@ class CameraView(Frame):
         capture_image_button = Button(camera_view_buttons_frame, text="   Capture", image=self.camera_icon, compound="left",
                                             relief="flat", command=self.capture_button_clicked)
 
+        phone_image_button = Button(camera_view_buttons_frame, text="   phone stream", image=self.camera_icon,
+                                      compound="left",
+                                      relief="flat", command=self.start_phone_button_clicked)
+
         #         --------- packing -----------
 
         camera_view_buttons_frame.pack(side="bottom")
@@ -42,6 +46,7 @@ class CameraView(Frame):
         start_streem_button.pack(side="left", pady=10, ipadx=30, ipady=10)
         stop_streem_button.pack(side="left", pady=10, ipadx=30, ipady=10)
         capture_image_button.pack(side="left", pady=10, ipadx=30, ipady=10)
+        phone_image_button.pack(side="left", pady=10, ipadx=30, ipady=10)
 
         Data.image_view.pack(side="top")
         Data.video_frame.pack(side="top")
@@ -54,6 +59,10 @@ class CameraView(Frame):
         # self.gif.start()
         _thread.start_new_thread(stream_thread_clicked, ())
 
+    def start_phone_button_clicked(self):
+        # self.gif.start()
+        _thread.start_new_thread(stream_phone_thread_clicked, ())
+
     def stop_button_clicked(self):
         data = {
             'order': stopStream,
@@ -62,6 +71,8 @@ class CameraView(Frame):
         jsonData = json.dumps(data)
         packet = Data.ssp.data2Packet(jsonData, Address.OBC, Type.Read)
         Data.server.senData(packet)
+
+        # Data.server.connect()
 
     def capture_button_clicked(self):
         # getImageNow

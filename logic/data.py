@@ -34,4 +34,5 @@ class Data:
     plot1 = None
     plot2 = None
     plot3 = None
+    files = []
 

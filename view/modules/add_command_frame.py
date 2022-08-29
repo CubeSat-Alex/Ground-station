@@ -1,6 +1,5 @@
 import _thread
 from tkinter import *
-from tktimepicker import AnalogPicker, constants
 from logic.functions import *
 from view.modules.commands_list import CommandsListFrame
 
@@ -22,7 +21,7 @@ class CommandsFrame(Frame):
         table_frame = Frame(right_frame, bg="white")
         table_buttons_frame = Frame(right_frame, bg="white")
 
-        add_command_frame = Frame(left_frame, bg="white", width=1000, height=300, borderwidth=10,
+        add_command_frame = Frame(left_frame, bg="white", width=1000, height=310, borderwidth=10,
                                   highlightbackground="black", highlightthickness=1, background="white")
 
         entry_frame = Frame(add_command_frame, bg="white")
@@ -42,6 +41,11 @@ class CommandsFrame(Frame):
                                    image=self.button_background2)
 
         add_command_lbl = Label(add_command_frame, text="Add command", bg="white", font=("Segoe UI", 14, "bold"))
+
+        mission_name_lbl = Label(add_command_frame, text="Mission name", bg="white", font=("Segoe UI", 14))
+
+        self.mission_name_entry = Entry(add_command_frame, width=20, fg='black', font=('Segoe UI', 16),
+                                    background="white")
 
         self.take_image_button = Button(add_command_frame, text="take image", command=self.switch_button_image,
                                         relief="flat",
@@ -97,12 +101,15 @@ class CommandsFrame(Frame):
         add_command_frame.pack(side="top", ipady=10)
 
         command_list.pack()
-        send_button.pack(side="left", padx=20, ipadx=20)
+        send_button.pack(side="left", ipadx=20)
         remove_row_button.pack(side="left")
 
         add_command_lbl.place(x=10, y=0)
-        self.take_image_button.place(x=150, y=50)
-        self.take_video_button.place(x=300, y=50)
+        mission_name_lbl.place(x=0, y=50)
+        self.mission_name_entry.place(x=160, y=50)
+
+        self.take_image_button.place(x=500, y=45)
+        self.take_video_button.place(x=620, y=45)
         with_angle_lbl.place(x=0, y=120)
         x_lbl.place(x=150, y=120)
         y_lbl.place(x=280, y=120)
@@ -126,11 +133,11 @@ class CommandsFrame(Frame):
         Label(entry_frame, text=" S: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
         self.entry_seconds.pack(side="left")
 
-        duration_lbl.place(x=0, y=170)
-        self.duration_entry.place(x=120, y=175)
-        minutes_lbl.place(x=200, y=170)
+        duration_lbl.place(x=0, y=180)
+        self.duration_entry.place(x=120, y=180)
+        minutes_lbl.place(x=200, y=180)
 
-        add_to_table_button.place(x=600, y=270)
+        add_to_table_button.place(x=500, y=280)
 
         self.entry_year.insert(0, Data.execution_time.year)
         self.entry_month.insert(0, Data.execution_time.month)
@@ -138,14 +145,16 @@ class CommandsFrame(Frame):
         self.entry_hours.insert(0, Data.execution_time.hour)
         self.entry_minutes.insert(0, Data.execution_time.minute)
         self.entry_seconds.insert(0, Data.execution_time.second)
+        self.mission_name_entry.insert(0, "default")
 
         self.angle1_entry.insert(0, "30")
         self.angle2_entry.insert(0, "60")
         self.duration_entry.insert(0, "0")
 
     def remove_row_button_clicked(self):
-        Data.command_map.pop()
 
+        if len(Data.command_map):
+            Data.command_map.pop()
         Data.command_list_table.delete(*Data.command_list_table.get_children())
 
         index = 0
@@ -156,7 +165,8 @@ class CommandsFrame(Frame):
                                                    'take image' if task["task"] == getImageAt else 'take video',
                                                    task["angle"],
                                                    task["duration"],
-                                                   task["atTime"]))
+                                                   task["atTime"],
+                                                   task["name"]))
 
     def send_button_clicked(self):
         _thread.start_new_thread(send_command_list, ())
@@ -173,7 +183,8 @@ class CommandsFrame(Frame):
         temp_map = {"task": getImageAt if Data.selected_switch == 1 else getVideoAt,
                     "angle": self.angle1_entry.get() + ", " + self.angle2_entry.get(),
                     "duration": self.duration_entry.get(),
-                    "atTime": str(Data.execution_time.strftime("%d/%m/%Y %H:%M:%S"))}
+                    "atTime": str(Data.execution_time.strftime("%d/%m/%Y %H:%M:%S")),
+                    "name": self.mission_name_entry.get().strip()}
 
         Data.command_map.append(temp_map)
 
@@ -187,7 +198,8 @@ class CommandsFrame(Frame):
                                                    'take image' if task["task"] == getImageAt else 'take video',
                                                    task["angle"],
                                                    task["duration"],
-                                                   task["atTime"]))
+                                                   task["atTime"],
+                                                   task["name"]))
 
     def switch_button_image(self):
         Data.selected_switch = 1
