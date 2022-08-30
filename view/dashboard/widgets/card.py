@@ -18,15 +18,14 @@ class Card(Frame):
 
         my_dict = {title: graph_data}
         df = pd.DataFrame(data=my_dict)
-        fig = df.plot.line(figsize=(8, 2), title=title, legend="").get_figure()
+        fig = df.plot.line(figsize=(7, 2), title=title, legend="").get_figure()
 
         self.plot = FigureCanvasTkAgg(fig, self)
 
-        NavigationToolbar2Tk(self.plot, self)
+        # NavigationToolbar2Tk(self.plot, self)
 
         #         --------- packing -----------
         self.plot.get_tk_widget().pack(side="right")
-
 
 
 class MapCard(Frame):
@@ -43,10 +42,11 @@ class MapCard(Frame):
         self.value_lbl = Label(self, text=str(long)+", "+str(lat), font=("Segoe UI Light", 25), background="white",
                                foreground="#277BC0")
 
-        self.map_widget = TkinterMapView(self, width=600, height=900, corner_radius=10)
+        self.map_widget = TkinterMapView(self, width=500, height=900, corner_radius=10)
         #         --------- packing -----------
         self.map_widget.pack(side="bottom")
 
-        self.map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
+        # self.map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
+        self.map_widget.set_tile_server("https://a.tile.openstreetmap.org/{z}/{x}/{y}.png", max_zoom=22)
         self.map_widget.set_position(long, lat)
         self.map_widget.set_marker(long, lat, text="Here")

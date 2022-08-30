@@ -8,9 +8,11 @@ class LDRPanel(Frame):
     val = 0
 
     def __init__(self, *args):
-        Frame.__init__(self, *args, background="white")
+        Frame.__init__(self, *args, background="white", borderwidth=0, highlightbackground="white",
+                             highlightthickness=0.2, highlightcolor="white")
 
-        self.canvas = Canvas(self, width=220, height=220, bg="white")
+        self.canvas = Canvas(self, width=220, height=220, bg="white", borderwidth=0, highlightbackground="white",
+                             highlightthickness=0.2, background="white", highlightcolor="white")
         self.canvas.pack(pady=20)
 
         self.ldr_body_image = PhotoImage(file='images/ldr_body.png').subsample(4, 4)

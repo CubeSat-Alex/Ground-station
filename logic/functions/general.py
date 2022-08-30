@@ -17,7 +17,7 @@ def add_new_line_table(line):
 
 def change_text_lbl():
     if datetime.now() < Data.start_session_time:
-        Data.data_timer_lbl.config(text=" Not Active Session", background="red")
+        Data.data_timer_lbl.config(text=" Next Session will be after", background="red")
         Data.duration_until_bext_session = Data.start_session_time - datetime.now()
         total_seconds = Data.duration_until_bext_session.seconds
         converted_format = time.strftime("%H:%M:%S", time.gmtime(total_seconds))
@@ -25,7 +25,7 @@ def change_text_lbl():
         Data.header_timer_frame.config(background="red")
 
     elif datetime.now() > Data.end_session_time:
-        Data.data_timer_lbl.config(text=" Not Active Session", background="red")
+        Data.data_timer_lbl.config(text=" Next Session will be after", background="red")
         Data.duration_until_bext_session = datetime.now() - Data.start_session_time
         total_seconds = Data.duration_until_bext_session.seconds
         total_seconds = 86400 - total_seconds
@@ -38,7 +38,7 @@ def change_text_lbl():
         total_seconds = Data.duration_until_bext_session.seconds
         converted_format = time.strftime("%H:%M:%S", time.gmtime(total_seconds))
         Data.data_timer_number_lbl.config(text=converted_format, background="#277BC0")
-        Data.data_timer_lbl.config(text=" Active Session", background="#277BC0")
+        Data.data_timer_lbl.config(text=" Session will be closed after", background="#277BC0")
         Data.header_timer_frame.config(background="#277BC0")
 
 

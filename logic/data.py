@@ -11,6 +11,8 @@ class Data:
     Temp_Card = None
     pressure_Card = None
     acceleration_Card = None
+    ldr_panel = None
+    satellite_orbit = None
     Map = None
     root = None
     start_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 12, 7, 00)

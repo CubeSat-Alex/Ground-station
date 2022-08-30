@@ -4,6 +4,8 @@ from logic.functions.general import *
 from view.dashboard.widgets.data_table import DataTableFrame
 from model.page import Page
 from view.dashboard.widgets.card import Card, MapCard
+from view.dashboard.widgets.ldr_panel import LDRPanel
+from view.dashboard.widgets.satellite_orbit import SatelliteOrbit
 
 
 class Dashboard(Page):
@@ -16,6 +18,8 @@ class Dashboard(Page):
 
         cards_frame = Frame(self, bg="white")
         left_frame = Frame(self, bg="white")
+        right_frame = Frame(self, bg="white")
+        right_top_frame = Frame(right_frame, bg="white")
 
         #         --------- Elements -----------
 
@@ -24,11 +28,13 @@ class Dashboard(Page):
         Data.Temp_Card = Card("Temperature", "22.5 C", [1.5, 1.2, 1.5, 1.6, 1.5], cards_frame)
         Data.pressure_Card = Card("Pressure", "66 F",         [1.5, 1.2, 1.5, 1.6, 1.5], cards_frame)
         Data.acceleration_Card = Card("Acceleration", "22.5", [330, 323, 323, 353, 300], cards_frame)
-        Data.Map = MapCard(30.057236, 31.323368, self)
+        Data.ldr_panel = LDRPanel(right_top_frame)
+        Data.satellite_orbit = SatelliteOrbit(right_top_frame)
+        Data.Map = MapCard(30.057236, 31.323368, right_frame)
 
         last30 = Data.dataBase.getLast30()
 
-        # change_location(last30["lang"].tolist()[0], last30["lat"].tolist()[0])
+        change_location(last30["lang"].tolist()[0], last30["lat"].tolist()[0])
         change_acceleration_figure(last30["acceleration"].tolist())
         change_pressure_figure(last30["pressure"].tolist())
         change_temp_figure(last30["tempreture"].tolist())
@@ -37,14 +43,15 @@ class Dashboard(Page):
 
         Data.data_table_frame.pack(side="top")
         left_frame.pack(side="left")
+        right_frame.pack(side="right")
+        right_top_frame.pack(side="top")
 
         cards_frame.pack(side="left")
 
-        Data.Temp_Card.grid(row=0, column=0, padx=10, pady=10)
-        Data.pressure_Card.grid(row=1, column=0, padx=10, pady=10)
-        Data.acceleration_Card.grid(row=2, column=0, padx=10, pady=10)
+        Data.Temp_Card.grid(row=0, column=0,)
+        Data.pressure_Card.grid(row=1, column=0,)
+        Data.acceleration_Card.grid(row=2, column=0,)
 
-        Data.Map.pack(side="right", padx=10, pady=10, fill="y")
-
-
-
+        Data.ldr_panel.pack(side="right", padx=10)
+        Data.satellite_orbit.pack(side="right", padx=10)
+        Data.Map.pack(side="right", padx=10, fill="y")

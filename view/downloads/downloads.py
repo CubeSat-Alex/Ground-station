@@ -10,6 +10,7 @@ class DownloadsPage(Page):
         self.config(bg="white")
 
         #         --------- Frames -----------
+        Button(self, text='ggggggg').pack()
 
         #         --------- Elements -----------
 

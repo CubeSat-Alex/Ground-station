@@ -9,9 +9,11 @@ class SatelliteOrbit(Frame):
     off_duration_degrees = 305
 
     def __init__(self, *args):
-        Frame.__init__(self, *args, background="white")
+        Frame.__init__(self, *args, borderwidth=0, highlightbackground="white", highlightthickness=0.2,
+                       background="white", highlightcolor="white")
 
-        self.canvas = Canvas(self, width=220, height=220, bg="white")
+        self.canvas = Canvas(self, width=220, height=220, bg="white", borderwidth=0, highlightbackground="white",
+                             highlightthickness=0.2, background="white", highlightcolor="white")
         self.canvas.pack(pady=20)
 
         self.planet_image = PhotoImage(file='images/orbit.png').subsample(10, 10)
