@@ -31,6 +31,7 @@ class Data:
     video_frame = None
     dataBase = None
     command_list_table = None
+    long_term_table = None
     realtime_table = None
     logs_table = None
     selected_switch = 1
@@ -42,4 +43,5 @@ class Data:
     files = []
     commands_frames = {}
     commands_counter = 0
+    realtime_bool = False
 

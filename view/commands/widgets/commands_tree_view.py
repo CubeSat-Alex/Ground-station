@@ -35,7 +35,7 @@ class TreeView(Frame):
             change_command_frame("GetTimeDifferenceFrame")
         elif page == "ADCS":
             change_command_frame("ADCSFrame")
-        elif page == "GPS":
+        elif page == "Telemetry":
             change_command_frame("GPSFrame")
         elif page == "real time":
             change_command_frame("OpenRealTimeFrame")
@@ -71,7 +71,7 @@ class TreeView(Frame):
         tree.insert('', END, text='real time', open=False, iid='open-real')
 
         tree.insert('', END, text='ADCS', open=False, iid='ADCS')
-        tree.insert('', END, text='GPS', open=False, iid='GPS')
+        tree.insert('', END, text='Telemetry', open=False, iid='GPS')
 
         tree.move('getTime', 'direct', 0)
         tree.move('setOnBoardTime', 'direct', 1)

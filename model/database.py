@@ -3,6 +3,7 @@ import sqlite3
 import pandas as pd
 
 date = "date"
+orbit = "orbit"
 acceleration = "acceleration"
 pressure = "pressure"
 tempreture = "tempreture"
@@ -32,9 +33,10 @@ CREATE TABLE IF NOT EXISTS "telemetry" (
 	"{}"	NUMERIC,
 	"{}"	NUMERIC,
 	"{}"	NUMERIC,
+	"{}"	NUMERIC,
 	"{}"	NUMERIC
 );
-'''.format(date, acceleration, pressure,
+'''.format(date,orbit, acceleration, pressure,
            tempreture, altitude,
            angleX, angleY, angleZ, lat,
            lang, ldr1, ldr2, ldr3, ldr4)
@@ -51,8 +53,7 @@ class DataBase:
         self.connection.close()
 
     def addData(self, data):
-        data = json.loads(data)
-        print(data["acceleration"])
+        data = json.loads(str(data))
         accelerationFile = data["acceleration"].split('\n')
         pressureFile = data["pressure"].split('\n')
         angleFile = data["angle"].split('\n')
@@ -63,19 +64,20 @@ class DataBase:
 
         for index in range(len(accelerationFile)):
             dictionary = {date: accelerationFile[index].split(',')[0],
-                          acceleration: accelerationFile[index].split(',')[1],
-                          pressure: pressureFile[index].split(',')[1],
-                          tempreture: tempretureFile[index].split(',')[1],
-                          altitude: latFile[index].split(',')[1],
-                          angleX: angleFile[index].split(',')[1],
-                          angleY: angleFile[index].split(',')[2],
-                          angleZ: angleFile[index].split(',')[3],
-                          lat: gpsFile[index].split(',')[1],
-                          lang: gpsFile[index].split(',')[2],
-                          ldr1: ldrFile[index].split(',')[1],
-                          ldr2: ldrFile[index].split(',')[1],
-                          ldr3: ldrFile[index].split(',')[2],
-                          ldr4: ldrFile[index].split(',')[3]}
+                          orbit: accelerationFile[index].split(',')[1],
+                          acceleration: accelerationFile[index].split(',')[2],
+                          pressure: pressureFile[index].split(',')[2],
+                          tempreture: tempretureFile[index].split(',')[2],
+                          altitude: latFile[index].split(',')[2],
+                          angleX: angleFile[index].split(',')[2],
+                          angleY: angleFile[index].split(',')[3],
+                          angleZ: angleFile[index].split(',')[4],
+                          lat: gpsFile[index].split(',')[2],
+                          lang: gpsFile[index].split(',')[3],
+                          ldr1: ldrFile[index].split(',')[2],
+                          ldr2: ldrFile[index].split(',')[2],
+                          ldr3: ldrFile[index].split(',')[3],
+                          ldr4: ldrFile[index].split(',')[4]}
 
             query = "insert into telemetry " + str(tuple(dictionary.keys())) + " values" + str(
                 tuple(dictionary.values())) + ";"

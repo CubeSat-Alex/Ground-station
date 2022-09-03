@@ -15,6 +15,11 @@ def add_new_line_table(line):
     Data.data_table.insert(parent='', index='end', text='', values=line)
 
 
+def add_new_line_command_table(line):
+    # Data.data_table.insert(parent='', index='end', text='', values=('20:30:22', '20', '50', '30', '30,40'))
+    Data.data_table.insert(parent='', index='end', text='', values=line)
+
+
 def change_text_lbl():
     if datetime.now() < Data.start_session_time:
         Data.data_timer_lbl.config(text=" Next Session will be after", background="red")

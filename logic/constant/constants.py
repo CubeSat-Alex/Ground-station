@@ -10,6 +10,10 @@ color_select = "#54FA9B"
 color_select_shad = "#C3FA9B"
 color_deselect = "#FFFFFF"
 
+# _thread.start_new_thread(send_command_list, ())
+# str(datetime.now().strftime(time_format)
+time_format = '%d-%m-%Y %H:%M:%S'
+
 # import datetime
 #
 # current = datetime.datetime.now()

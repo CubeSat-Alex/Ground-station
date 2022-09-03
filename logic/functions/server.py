@@ -1,5 +1,6 @@
 import json
 from PIL import ImageTk, Image
+from logic.constant.constants import time_format
 from logic.functions.figures import *
 from logic.functions.general import *
 from model.gallery_logic import *
@@ -15,10 +16,26 @@ def start_server():
     print(Data.server.connect())
 
 
-def request(order, duration, atTime, angle, name):
+def request(order, atTime,
+            duration="0",
+            x=0, y=0,
+            name="none",
+            command='none',
+            sys="none",
+            start='0', end=0
+            ):
+
     data = {
         'order': order,
-        'args': {'duration': duration, 'time': atTime, 'angle': angle, 'mission': name},
+        'args': {'duration': duration,
+                 'time': atTime,
+                 'mission': name,
+                 "sys": sys,
+                 'command': command,
+                 'X': x,
+                 'Y': y,
+                 'start': start,
+                 'end': end},
     }
 
     jsonData = json.dumps(data)
@@ -52,27 +69,27 @@ def receive_fromOBC():
 
 def capture_thread_clicked():
 
-    request(getImageNow, "0", "0", "0", "none")
-    path = Data.server.getImage(str(datetime.now().strftime("%d-%m-%Y-%H-%M-%S")))
+    request(Orders.capture, "0")
+    path = Data.server.getImage(str(datetime.now().strftime(time_format)))
     Data.current_image = ImageTk.PhotoImage(Image.open(path))
     Data.image_view.config(image=Data.current_image)
 
 
 def stream_thread_clicked():
 
-    request(getStream, "0", "0", "0", "none")
-    Data.server.getVideo("output/videos/"+str(datetime.now().strftime("%d_%m_%Y %H-%M-%S") + ".avi"))
+    request(Orders.getStream, "0")
+    Data.server.getVideo("output/videos/"+str(datetime.now().strftime(time_format) + ".avi"))
 
 
 def stream_phone_thread_clicked():
 
-    request('z', "0", "0", "0", "none")
-    Data.server.getVideo("output/videos/"+str(datetime.now().strftime("%d_%m_%Y %H-%M-%S") + ".avi"))
+    request(Orders.getStream, "0")
+    Data.server.getVideo("output/videos/"+str(datetime.now().strftime(time_format) + ".avi"))
 
 
 def get_telemetry():
 
-    request(getTelemetry, "0", "0", "0", "none")
+    request(Orders.getTelemetry, '')
     receive_fromOBC()
 
     Data.dataBase.addData(Data.data_received)
@@ -88,7 +105,8 @@ def get_telemetry():
                 data["altitude"][i],
                 "F:" + str(data["ldr1"][i]) + "B:" + str(data["ldr2"][i]) + "R:" + str(data["ldr3"][i]) + "L:" + str(
                     data["ldr4"][i]))
-        add_new_line_table(line)
+
+        Data.data_table.insert(parent='', index='end', text='', values=line)
 
     last30 = Data.dataBase.getLast30()
 
@@ -100,7 +118,7 @@ def get_telemetry():
 
 def get_saved_images():
 
-    request(getImages, "0", "0", "0", 'none')
+    request(Orders.getImages, "0")
     receive_fromOBC()
 
     print(Data.data_received)
@@ -115,7 +133,7 @@ def get_saved_images():
 
 def get_saved_videos():
 
-    request(getVideos, "0", "0", "0", "none")
+    request(Orders.getVideos, "0")
     receive_fromOBC()
 
     print(Data.data_received)

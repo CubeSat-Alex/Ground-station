@@ -1,6 +1,10 @@
+import _thread
 from tkinter import *
 from datetime import datetime
+from logic.constant.constants import time_format
+from logic.constant.orders import Orders
 from logic.data import Data
+from logic.functions.server import request, receive_fromOBC, get_telemetry
 
 
 class GETTelemetryFrame(Frame):
@@ -27,13 +31,15 @@ class GETTelemetryFrame(Frame):
     def get_telemetry_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
         Data.command_list_table.insert(parent='', index='end', text='', values=(
-            str(Data.commands_counter), "get telemetry", datetime.now().strftime("%d_%m_%Y %H-%M-%S"),
+            str(Data.commands_counter), "get telemetry", datetime.now().strftime(time_format),
             Data.mission_entry.get(), " - "
         ))
+        _thread.start_new_thread(get_telemetry, ())
 
     def del_telemetry_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
         Data.command_list_table.insert(parent='', index='end', text='', values=(
-            str(Data.commands_counter), "delete telemetry", datetime.now().strftime("%d_%m_%Y %H-%M-%S"),
+            str(Data.commands_counter), "delete telemetry", datetime.now().strftime(time_format),
             Data.mission_entry.get(), " - "
         ))
+        request(Orders.deleteTelemetry, '0')
