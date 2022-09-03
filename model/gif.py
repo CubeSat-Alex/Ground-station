@@ -4,9 +4,6 @@ import time
 
 
 class GifPlay:
-    # gif=GIF.gifplay(self.model2,'./res/neural.gif',0.1)
-    # gif.play()
-    # This will play gif infinitely
     play = True
 
     def __init__(self, label, giffile, delay):

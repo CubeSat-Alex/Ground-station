@@ -1,10 +1,10 @@
 from tkinter import *
-from view.commands.widgets.add_command_frame import CommandsFrame
-from view.commands.widgets.files_table import FilesTableFrame
+from logic.data import Data
+from view.commands.widgets.commands_frame import CommandsFrame
+from view.commands.widgets.commands_list import CommandsListFrame
+from view.commands.widgets.commands_tree_view import TreeView
 from model.page import Page
-from view.commands.widgets.request_data_frame import RequestDataFrame
-from view.dashboard.widgets.satellite_orbit import SatelliteOrbit
-from view.commands.widgets.session_period_frame import SessionPeriodFrame
+from view.commands.widgets.real_table import RealtimeTable
 
 
 class Control(Page):
@@ -15,26 +15,36 @@ class Control(Page):
         self.config(bg="white")
 
         #         --------- Frames -----------
-        centered_frame = Frame(self, bg="white")
         right_frame = Frame(self, bg="white")
         left_frame = Frame(self, bg="white")
+        bottom_frame = Frame(self, bg="white")
+        mission_name_frame = Frame(self, bg="white")
 
         #         --------- Elements -----------
 
-        session_period_frame = SessionPeriodFrame(left_frame)
-        request_data_frame = RequestDataFrame(right_frame)
-        command_frame = CommandsFrame(centered_frame)
-        files_table_frame = FilesTableFrame(right_frame)
-        satellite_orbit = SatelliteOrbit(left_frame)
+        tree_view = TreeView(left_frame)
+        command_list = CommandsListFrame(bottom_frame)
+        commands_frame = CommandsFrame(bottom_frame)
+        realtime_table = RealtimeTable(right_frame)
+
+        Data.mission_entry = Entry(mission_name_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
+                                   width=20, fg='black')
+        Label(mission_name_frame, text=" Mission Name: ", bg="white", font=("Segoe UI", 14)).pack(side="left")
+        Data.mission_entry.pack(side="left")
+
+        Data.mission_entry.insert(0, "General Mission")
 
         #         --------- packing -----------
-        right_frame.pack(side="right")
+        right_frame.pack(side="right", fill="y")
         left_frame.pack(side="left", fill="y")
-        centered_frame.pack(side="left")
+        bottom_frame.pack(side="bottom", fill="x")
 
-        command_frame.pack(side="left")
-        session_period_frame.pack(side="bottom", padx=40)
-        request_data_frame.pack(side="top")
-        files_table_frame.pack(side="top")
-        satellite_orbit.pack(side="top", pady=100)
+        tree_view.pack(side="left", fill='y')
+        realtime_table.pack(side="left", fill='y')
+        mission_name_frame.pack(side="top", fill='x')
+        commands_frame.pack(side="top", fill='x')
+        command_list.pack(side="top", fill='x')
+
+
+
 

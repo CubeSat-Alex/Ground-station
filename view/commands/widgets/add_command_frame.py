@@ -1,10 +1,12 @@
 import _thread
 from tkinter import *
+from logic.constant.orders import *
 from logic.functions.general import *
+from logic.functions.server import send_command_list
 from view.commands.widgets.commands_list import CommandsListFrame
 
 
-class CommandsFrame(Frame):
+class OldCommandsFrame(Frame):
 
     def __init__(self, *args):
         Frame.__init__(self, *args, borderwidth=10, highlightbackground="black", highlightthickness=0,
@@ -27,8 +29,6 @@ class CommandsFrame(Frame):
         entry_frame = Frame(add_command_frame, bg="white")
 
         #         --------- Elements -----------
-
-        command_list = CommandsListFrame(table_frame)
 
         self.button_background1 = PhotoImage(file="images/buttons/send.png").subsample(15, 15)
         send_button = Button(table_buttons_frame, text="   Send", command=self.send_button_clicked, relief="flat",
@@ -100,7 +100,6 @@ class CommandsFrame(Frame):
         table_buttons_frame.pack(side="top")
         add_command_frame.pack(side="top", ipady=10)
 
-        command_list.pack()
         send_button.pack(side="left", ipadx=20)
         remove_row_button.pack(side="left")
 
@@ -151,22 +150,22 @@ class CommandsFrame(Frame):
         self.angle2_entry.insert(0, "60")
         self.duration_entry.insert(0, "0")
 
-    def remove_row_button_clicked(self):
-
-        if len(Data.command_map):
-            Data.command_map.pop()
-        Data.command_list_table.delete(*Data.command_list_table.get_children())
-
-        index = 0
-        for task in Data.command_map:
-            index = index + 1
-            Data.command_list_table.insert(parent='', index='end', text='',
-                                           values=(str(index),
-                                                   'take image' if task["task"] == getImageAt else 'take video',
-                                                   task["angle"],
-                                                   task["duration"],
-                                                   task["atTime"],
-                                                   task["name"]))
+    # def remove_row_button_clicked(self):
+    #
+    #     if len(Data.command_map):
+    #         Data.command_map.pop()
+    #     Data.command_list_table.delete(*Data.command_list_table.get_children())
+    #
+    #     index = 0
+    #     for task in Data.command_map:
+    #         index = index + 1
+    #         Data.command_list_table.insert(parent='', index='end', text='',
+    #                                        values=(str(index),
+    #                                                'take image' if task["task"] == getImageAt else 'take video',
+    #                                                task["angle"],
+    #                                                task["duration"],
+    #                                                task["atTime"],
+    #                                                task["name"]))
 
     def send_button_clicked(self):
         _thread.start_new_thread(send_command_list, ())
@@ -201,12 +200,12 @@ class CommandsFrame(Frame):
                                                    task["atTime"],
                                                    task["name"]))
 
-    def switch_button_image(self):
-        Data.selected_switch = 1
-        self.take_image_button.config(background="#0ba9bc", foreground="white")
-        self.take_video_button.config(background="white", foreground="black")
-
-    def switch_button_video(self):
-        Data.selected_switch = 0
-        self.take_image_button.config(background="white", foreground="black")
-        self.take_video_button.config(background="#0ba9bc", foreground="white")
+    # def switch_button_image(self):
+    #     Data.selected_switch = 1
+    #     self.take_image_button.config(background="#0ba9bc", foreground="white")
+    #     self.take_video_button.config(background="white", foreground="black")
+    #
+    # def switch_button_video(self):
+    #     Data.selected_switch = 0
+    #     self.take_image_button.config(background="white", foreground="black")
+    #     self.take_video_button.config(background="#0ba9bc", foreground="white")

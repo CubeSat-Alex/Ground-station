@@ -1,12 +1,33 @@
-getImageNow = 'a'
-getStream = 'b'
-stopStream = 'i'
-getTelemetry = 'c'
+class Orders:
+    # Direct
+    getTime = 'd'
+    setOnBoardTime = 'e'
+    controlSubsystem = 'g'
+    getSubsystemStatus = 'h'
+    openRealTime = 'i'
+    setNextSession = 'f'
 
-getImages = 'd'
-getVideos = 'e'
-getAllGallery = 'j'
+    # downloads - playback
+    getTelemetry = 'l'
+    getImages = 'p'
+    getVideos = 'q'
+    deleteTelemetry = 'm'
+    deleteVideos = 's'
+    deleteImages = 'r'
 
-getVideoFor = 'f'
-getVideoAt = 'g'
-getImageAt = 'h'
+    # mission - payload
+    takeVideoAt = 'j'
+    takeImageAt = 'k'
+
+    # Geo
+    getStream = 'b'
+    stopStream = 'c'
+    capture = 'a'
+
+    # Logs
+    getLogs = 'n'
+    deleteLogs = 'o'
+
+
+
+

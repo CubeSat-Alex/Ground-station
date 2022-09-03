@@ -67,3 +67,8 @@ def initial_setup(root):
     Data.dataBase = DataBase()
     initial_files()
     _thread.start_new_thread(start_server, ())
+
+
+def change_command_frame(frameName):
+    frame = Data.commands_frames[frameName]
+    frame.tkraise()
