@@ -326,8 +326,7 @@ class OpenRealTimeFrame(Frame):
         ldr4 = str(st['TT']['LDR4'])
 
         Data.realtime_table.insert(parent='', index='end', text='', values=(
-            datetime.now().strftime(time_format), temp, pressure, acceleration, angle, altitude,
-            str('F: ' + ldr1+'\nB: ' + ldr2+'\nR: ' + ldr3+'\nL: '+ldr4)
+            datetime.now().strftime(time_format), temp, pressure, acceleration, angle, altitude, ldr1, ldr2, ldr3, ldr4
         ))
 
         if Data.realtime_bool:
@@ -342,3 +341,26 @@ class OpenRealTimeFrame(Frame):
         ))
         print('converted to false')
         Data.realtime_bool = False
+
+
+class StorageFrame(Frame):
+    def __init__(self, parent, controller):
+        Frame.__init__(self, parent)
+        self.config(borderwidth=0, highlightbackground="white", highlightthickness=0.2, bg="white", height=100)
+        self.controller = controller
+
+        label = Label(self, text="real time", font=("", 14, "bold"), background="white")
+        label.pack(side="top", fill="x")
+
+        content_frame = Frame(self, bg="white")
+        content_frame.pack(anchor="center", pady=20, fill="both", expand=1)
+
+        button = Button(self, text="Open real time data transfer", font=("", 14, "bold"),
+                        command=self.open_real_time_button_clicked,
+                        relief="flat")
+        button.pack(side="bottom", fill="x")
+
+        button = Button(self, text="close real time data transfer", font=("", 14, "bold"),
+                        command=self.close_real_time_button_clicked,
+                        relief="flat")
+        button.pack(side="bottom", fill="x")

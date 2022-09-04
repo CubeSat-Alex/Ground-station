@@ -28,6 +28,9 @@ class Orders:
     getLogs = 'n'
     deleteLogs = 'o'
 
+    # storage
+    getStorage = 't'
+
 
 
 

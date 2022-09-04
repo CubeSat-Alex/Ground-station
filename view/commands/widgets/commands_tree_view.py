@@ -51,6 +51,8 @@ class TreeView(Frame):
             change_command_frame("DownloadsFrame")
         elif page == "logs":
             change_command_frame("LogsFrame")
+        elif page == "get storage analyses":
+            change_command_frame("StorageFrame")
 
     def fill_tree(self, tree):
         tree.heading('#0', text='Commands', anchor=W)
@@ -69,6 +71,7 @@ class TreeView(Frame):
         tree.insert('', END, text='subsystems', open=False, iid='control-sub')
         # tree.insert('', END, text='getSubsystemStatus', open=False, iid='get-sub-status')
         tree.insert('', END, text='real time', open=False, iid='open-real')
+        tree.insert('', END, text='get storage analyses', open=False, iid='get_storage')
 
         tree.insert('', END, text='ADCS', open=False, iid='ADCS')
         tree.insert('', END, text='Telemetry', open=False, iid='GPS')
@@ -79,6 +82,7 @@ class TreeView(Frame):
         tree.move('control-sub', 'direct', 3)
         # tree.move('get-sub-status', 'direct', 3)
         tree.move('open-real', 'direct', 4)
+        tree.move('get_storage', 'direct', 5)
 
         tree.move('ADCS', 'control-sub', 0)
         tree.move('GPS', 'control-sub', 1)

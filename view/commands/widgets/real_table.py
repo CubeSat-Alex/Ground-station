@@ -41,10 +41,10 @@ class RealtimeTable(Frame):
         Data.realtime_table.heading("Acceleration", text="Acceleration", anchor=CENTER)
         Data.realtime_table.heading("Angle", text="Angle", anchor=CENTER)
         Data.realtime_table.heading("altitude", text="Altitude", anchor=CENTER)
-        Data.realtime_table.heading("FLDR", text="LDR", anchor=CENTER)
-        Data.realtime_table.heading("BLDR", text="LDR", anchor=CENTER)
-        Data.realtime_table.heading("RLDR", text="LDR", anchor=CENTER)
-        Data.realtime_table.heading("LLDR", text="LDR", anchor=CENTER)
+        Data.realtime_table.heading("FLDR", text="FLDR", anchor=CENTER)
+        Data.realtime_table.heading("BLDR", text="BLDR", anchor=CENTER)
+        Data.realtime_table.heading("RLDR", text="RLDR", anchor=CENTER)
+        Data.realtime_table.heading("LLDR", text="LLDR", anchor=CENTER)
 
         Data.realtime_table.insert(parent='', index='end', text='', values=(
             datetime.now(), "25", "12", "333.0", "45,60", 1500, "200", "200", "200", "200"

@@ -24,7 +24,7 @@ class CommandsFrame(Frame):
         Data.commands_frames = {}
         for F in (GetTimeDifferenceFrame, SetOnBoardTimeFrame, SetSessionTimeFrame, ADCSFrame, GPSFrame,
                   OpenRealTimeFrame, EmptyCommands, DownloadsFrame, LogsFrame,
-                  GETTelemetryFrame, TakeImageFrame, TakeVideoFrame):
+                  GETTelemetryFrame, TakeImageFrame, TakeVideoFrame, StorageFrame):
             page_name = F.__name__
             frame = F(parent=container, controller=self)
             Data.commands_frames[page_name] = frame
