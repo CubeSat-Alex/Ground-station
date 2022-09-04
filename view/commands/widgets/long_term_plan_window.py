@@ -1,7 +1,6 @@
 from datetime import datetime
 from tkinter import *
 from tkinter.ttk import Style, Treeview
-
 from logic.constant.constants import time_format
 from logic.data import Data
 from view.commands.widgets.time_picker import Picker

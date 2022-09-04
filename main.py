@@ -3,7 +3,7 @@ import ctypes as ct
 from logic.functions.general import window_dispose, initial_setup
 from view.main_view import MainView
 
-
+# version
 def dark_title_bar(window):
     window.update()
     DWMWA_USE_IMMERSIVE_DARK_MODE = 20
