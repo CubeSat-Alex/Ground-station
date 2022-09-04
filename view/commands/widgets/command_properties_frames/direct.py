@@ -7,6 +7,7 @@ from logic.constant.constants import time_format
 from logic.constant.orders import Orders
 from logic.data import Data
 from logic.functions.server import request, receive_fromOBC
+from logic.shared_prefrence import cache
 from view.commands.widgets.long_term_plan_window import LongTermFrame
 from view.commands.widgets.time_picker import Picker
 
@@ -52,7 +53,7 @@ class GetTimeDifferenceFrame(Frame):
         print(obcDate)
         difference = datetime.now() - obcDate
         print(difference.total_seconds())
-        messagebox.showinfo("time difference", str(difference.total_seconds()) + " S")
+        messagebox.showinfo("time difference", 'time difference is \n' + str(difference.total_seconds()) + " S")
 
 
 class SetOnBoardTimeFrame(Frame):
@@ -221,7 +222,7 @@ class GPSFrame(Frame):
         self.config(borderwidth=0, highlightbackground="white", highlightthickness=0.2, bg="white", height=100)
         self.controller = controller
 
-        label = Label(self, text="GPS Subsystem", font=("", 14, "bold"), background="white")
+        label = Label(self, text="Telemetry Subsystem", font=("", 14, "bold"), background="white")
         label.pack(side="top", fill="x")
 
         content_frame = Frame(self, bg="white")
@@ -240,7 +241,7 @@ class GPSFrame(Frame):
     def on_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
         Data.command_list_table.insert(parent='', index='end', text='', values=(
-            str(Data.commands_counter), "GPS", datetime.now().strftime(time_format),
+            str(Data.commands_counter), "Telemetry", datetime.now().strftime(time_format),
             Data.mission_entry.get(), "ON"
         ))
         request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="TT", command="ON")
@@ -248,7 +249,7 @@ class GPSFrame(Frame):
     def off_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
         Data.command_list_table.insert(parent='', index='end', text='', values=(
-            str(Data.commands_counter), "GPS", datetime.now().strftime(time_format),
+            str(Data.commands_counter), "Telemetry", datetime.now().strftime(time_format),
             Data.mission_entry.get(), "OFF"
         ))
         request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="TT", command="OFF")
@@ -256,7 +257,7 @@ class GPSFrame(Frame):
     def reset_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
         Data.command_list_table.insert(parent='', index='end', text='', values=(
-            str(Data.commands_counter), "GPS", datetime.now().strftime(time_format),
+            str(Data.commands_counter), "Telemetry", datetime.now().strftime(time_format),
             Data.mission_entry.get(), "RESET"
         ))
         request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="TT", command="RESET")
@@ -264,7 +265,7 @@ class GPSFrame(Frame):
     def check_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
         Data.command_list_table.insert(parent='', index='end', text='', values=(
-            str(Data.commands_counter), "GPS", datetime.now().strftime(time_format),
+            str(Data.commands_counter), "Telemetry", datetime.now().strftime(time_format),
             Data.mission_entry.get(), "Check status"
         ))
         request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="TT", command="LIVE")
@@ -349,18 +350,101 @@ class StorageFrame(Frame):
         self.config(borderwidth=0, highlightbackground="white", highlightthickness=0.2, bg="white", height=100)
         self.controller = controller
 
-        label = Label(self, text="real time", font=("", 14, "bold"), background="white")
+        label = Label(self, text="get storage analysis", font=("", 14, "bold"), background="white")
         label.pack(side="top", fill="x")
 
         content_frame = Frame(self, bg="white")
-        content_frame.pack(anchor="center", pady=20, fill="both", expand=1)
+        content_frame.pack(anchor="center", pady=20, fill="both", expand=1, padx=20)
 
-        button = Button(self, text="Open real time data transfer", font=("", 14, "bold"),
-                        command=self.open_real_time_button_clicked,
+        image_lbl = Label(content_frame, text="Images", font=("Segoe UI Light", 20), background="white")
+        image_lbl.grid(row=0, column=0, padx=120)
+
+        Data.image_lbl_var = Label(content_frame, text="5 MB", font=("", 17, "bold"), background="white",
+                              foreground="#000799")
+        Data.image_lbl_var.grid(row=0, column=1)
+
+        image_lbl2 = Label(content_frame, text="/ 5 GB", font=("", 14, "bold"), background="white")
+        image_lbl2.grid(row=0, column=2)
+
+        # ---------------------------------
+
+        videos_lbl = Label(content_frame, text="Videos", font=("Segoe UI Light", 20), background="white")
+        videos_lbl.grid(row=1, column=0, padx=120)
+
+        Data.videos_lbl_var = Label(content_frame, text="5 MB ", font=("", 17, "bold"), background="white",
+                              foreground="#000799")
+        Data.videos_lbl_var.grid(row=1, column=1)
+
+        videos_lbl2 = Label(content_frame, text="/ 5 GB", font=("", 14, "bold"), background="white")
+        videos_lbl2.grid(row=1, column=2)
+
+        # ---------------------------------
+
+        telemetry_lbl = Label(content_frame, text="Telemetry", font=("Segoe UI Light", 20), background="white")
+        telemetry_lbl.grid(row=2, column=0, padx=120)
+
+        Data.telemetry_var = Label(content_frame, text="5 MB", font=("", 17, "bold"), background="white",
+                              foreground="#000799")
+        Data.telemetry_var.grid(row=2, column=1)
+
+        telemetry2 = Label(content_frame, text="/ 5 GB", font=("", 14, "bold"), background="white")
+        telemetry2.grid(row=2, column=2)
+
+        # ---------------------------------
+
+        logs_lbl = Label(content_frame, text="Logs", font=("Segoe UI Light", 20), background="white")
+        logs_lbl.grid(row=3, column=0, padx=120)
+
+        Data.logs_lbl_var = Label(content_frame, text="5 MB", font=("", 17, "bold"), background="white",
+                              foreground="#000799")
+        Data.logs_lbl_var.grid(row=3, column=1)
+
+        logs_lbl2 = Label(content_frame, text="/ 5 GB", font=("", 14, "bold"), background="white")
+        logs_lbl2.grid(row=3, column=2)
+
+        button = Button(self, text="List", font=("", 14, "bold"), command=self.list_button_click,
                         relief="flat")
         button.pack(side="bottom", fill="x")
 
-        button = Button(self, text="close real time data transfer", font=("", 14, "bold"),
-                        command=self.close_real_time_button_clicked,
-                        relief="flat")
-        button.pack(side="bottom", fill="x")
+        jsn = {
+            "Images": Data.cache.get('Images'),
+            'Videos': Data.cache.get('Videos'),
+            'Telemtry': Data.cache.get('Telemtry'),
+            'Logs': Data.cache.get('Logs')
+        }
+
+        video_size = str(int(jsn['Videos'])/1000)+' KB' if jsn['Videos'] < 1000000 else str(int(jsn['Videos']) /1000000) +' MB'
+        telemetry_size = str(int(jsn['Telemtry'])/1000)+' KB' if jsn['Telemtry'] < 1000000 else str(int(jsn['Telemtry']) /1000000) +' MB'
+        logs_size = str(int(jsn['Logs'])/1000)+' KB' if jsn['Logs'] < 1000000 else str(int(jsn['Logs']) /1000000) +' MB'
+        image_size = str(int(jsn['Images'])/1000)+' KB' if jsn['Images'] < 1000000 else str(int(jsn['Images']) /1000000) +' MB'
+
+        Data.image_lbl_var.config(text=image_size)
+        Data.videos_lbl_var.config(text=video_size)
+        Data.telemetry_var.config(text=telemetry_size)
+        Data.logs_lbl_var.config(text=logs_size)
+
+    def list_button_click(self):
+        Data.commands_counter = Data.commands_counter + 1
+        Data.command_list_table.insert(parent='', index='end', text='', values=(
+            str(Data.commands_counter), "Get Storage", datetime.now().strftime(time_format),
+            Data.mission_entry.get(), " - "
+        ))
+        _thread.start_new_thread(self.storage_thread, ())
+
+    def storage_thread(self):
+        request(Orders.getStorage, str(datetime.now().strftime(time_format)))
+        receive_fromOBC()
+        jsn = json.loads(Data.data_received)
+
+        image_size = str(int(jsn['Images'])/1000)+' KB' if jsn['Images'] < 1000000 else str(int(jsn['Images']) /1000000) +' MB'
+        video_size = str(int(jsn['Videos'])/1000)+' KB' if jsn['Videos'] < 1000000 else str(int(jsn['Videos']) /1000000) +' MB'
+        telemetry_size = str(int(jsn['Telemtry'])/1000)+' KB' if jsn['Telemtry'] < 1000000 else str(int(jsn['Telemtry']) /1000000) +' MB'
+        logs_size = str(int(jsn['Logs'])/1000)+' KB' if jsn['Logs'] < 1000000 else str(int(jsn['Logs']) /1000000) +' MB'
+
+        Data.image_lbl_var.config(text=image_size)
+        Data.videos_lbl_var.config(text=video_size)
+        Data.telemetry_var.config(text=telemetry_size)
+        Data.logs_lbl_var.config(text=logs_size)
+
+        for key, value in jsn.items():
+            Data.cache.add(key, value)

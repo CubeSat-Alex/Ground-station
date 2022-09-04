@@ -1,6 +1,10 @@
+import _thread
 from tkinter import *
 from datetime import datetime
+from logic.constant.constants import time_format
+from logic.constant.orders import Orders
 from logic.data import Data
+from logic.functions.server import request, receive_fromOBC
 
 
 class LogsFrame(Frame):
@@ -27,13 +31,34 @@ class LogsFrame(Frame):
     def get_all_logs_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
         Data.command_list_table.insert(parent='', index='end', text='', values=(
-            str(Data.commands_counter), "get logs", datetime.now().strftime("%d_%m_%Y %H-%M-%S"),
+            str(Data.commands_counter), "get logs", datetime.now().strftime(time_format),
             Data.mission_entry.get(), ' - '
         ))
+        _thread.start_new_thread(self.get_logs_thread, ())
+
+    def get_logs_thread(self):
+        request(Orders.getLogs, str(datetime.now().strftime(time_format)))
+        receive_fromOBC()
+        Data.dataBase.addLogs(Data.data_received)
+        self.add_to_table()
+
+    def add_to_table(self):
+        jsn = Data.dataBase.getLogs()
+
+        for i in range(jsn.shape[0]):
+            orbit_num = jsn["orbit"][i]
+            command = jsn["details"][i]
+            time = jsn["date"][i]
+            status = jsn["state"][i]
+
+            Data.logs_table.insert(parent='', index='end', text='', values=(
+                orbit_num, command, time, status
+            ))
 
     def delete_all_logs_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
         Data.command_list_table.insert(parent='', index='end', text='', values=(
-            str(Data.commands_counter), "delete logs", datetime.now().strftime("%d_%m_%Y %H-%M-%S"),
+            str(Data.commands_counter), "delete logs", datetime.now().strftime(time_format),
             Data.mission_entry.get(), ' - '
         ))
+        request(Orders.deleteLogs, str(datetime.now().strftime(time_format)))

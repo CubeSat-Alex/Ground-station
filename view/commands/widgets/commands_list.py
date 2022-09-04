@@ -21,7 +21,7 @@ class CommandsListFrame(Frame):
 
         Data.command_list_table.column("#0", width=0)
         Data.command_list_table.column("ID", anchor=CENTER, width=25)
-        Data.command_list_table.column("Command", anchor=CENTER, width=250)
+        Data.command_list_table.column("Command", anchor=CENTER, width=150)
         Data.command_list_table.column("Execution", anchor=CENTER, width=250)
         Data.command_list_table.column("name", anchor=CENTER, width=150)
         Data.command_list_table.column("arguments", anchor=CENTER, width=250)

@@ -1,5 +1,7 @@
 from datetime import datetime, timedelta
 
+from logic.shared_prefrence import Cache
+
 
 class Data:
     data_timer_lbl = None
@@ -55,3 +57,14 @@ class Data:
     long_end_button = None
     long_start_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 12, 10, 00)
     long_end_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 12, 30, 00)
+
+    # general
+    statistics = {}
+
+    # statistics
+    image_lbl_var = None
+    videos_lbl_var = None
+    telemetry_var = None
+    logs_lbl_var = None
+    cache = Cache()
+

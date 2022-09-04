@@ -17,7 +17,10 @@ class LogsPage(Page):
         style.configure("mystyle.Treeview.Heading", font=('Calibri', 14,))
         style.configure("mystyle.Treeview", font=('Calibri', 13))
 
-        Data.logs_table = Treeview(self, style="mystyle.Treeview", height=3)
+        scrollbar = Scrollbar(self)
+        scrollbar.pack(side=RIGHT, fill=Y)
+
+        Data.logs_table = Treeview(self, style="mystyle.Treeview", height=3, yscrollcommand=scrollbar.set)
 
         Data.logs_table['columns'] = ('orbit_number', 'command', 'time', 'status')
 
@@ -33,16 +36,22 @@ class LogsPage(Page):
         Data.logs_table.heading("time", text="time", anchor=CENTER)
         Data.logs_table.heading("status", text="status", anchor=CENTER)
 
-        Data.logs_table.insert(parent='', index='end', text='', values=(
-            "1", "check OBC", datetime.now(), "Done",
-        ))
-        Data.logs_table.insert(parent='', index='end', text='', values=(
-            "2", "OPEN ADCS",  datetime.now(), "Done",
-        ))
-
         Label(self, font=("", 20), foreground="white", text="txt").pack(side="top", pady=30)
         Data.logs_table.pack(side="bottom", expand=1, fill="both", ipady=20)
 
+        jsn = Data.dataBase.getLogs()
+
+        for i in range(jsn.shape[0]):
+            orbit_num = jsn["orbit"][i]
+            command = jsn["details"][i]
+            time = jsn["date"][i]
+            status = jsn["state"][i]
+
+            Data.logs_table.insert(parent='', index='end', text='', values=(
+                orbit_num, command, time, status
+            ))
+
+        scrollbar.config(command=Data.logs_table.yview)
         #         --------- Frames -----------
 
         #         --------- Elements -----------

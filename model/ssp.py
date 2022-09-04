@@ -41,7 +41,7 @@ class SSP:
         checksum = low + high
         data = data[0:-2]
         exceptCheckSum = (self.crc_calculator.calculate_checksum(bytes(data)))
-        if checksum == exceptCheckSum and data[0] == self.SRC.value:
+        if True :#checksum == exceptCheckSum and data[0] == self.SRC.value:
             data = data[3:]
             return ''.join(chr(i) for i in data)
 
