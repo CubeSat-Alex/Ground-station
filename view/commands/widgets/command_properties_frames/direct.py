@@ -196,7 +196,6 @@ class ADCSFrame(Frame):
         ))
         request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="ADCS", command="OFF")
 
-
     def reset_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
         Data.command_list_table.insert(parent='', index='end', text='', values=(
