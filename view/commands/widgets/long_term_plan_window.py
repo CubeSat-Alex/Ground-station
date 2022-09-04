@@ -92,6 +92,7 @@ class LongTermFrame:
     def remove_last(self):
         if len(Data.long_term_plan_map) > 0:
             Data.long_term_plan_map.pop()
+            Data.dataBase.deletePlan()
             self.fill_table()
 
     def fill_table(self):
