@@ -30,7 +30,7 @@ class Dashboard(Page):
         Data.acceleration_Card = Card("Acceleration", "22.5", [330, 323, 323, 353, 300], cards_frame)
         Data.ldr_panel = LDRPanel(right_top_frame)
         Data.satellite_orbit = SatelliteOrbit(right_top_frame)
-        # Data.Map = MapCard(30.057236, 31.323368, right_frame)
+        Data.Map = MapCard(30.057236, 31.323368, right_frame)
 
         last30 = Data.dataBase.getLast30()
 
@@ -54,4 +54,4 @@ class Dashboard(Page):
 
         Data.ldr_panel.pack(side="right", padx=10)
         Data.satellite_orbit.pack(side="right", padx=10)
-        # Data.Map.pack(side="right", padx=10, fill="y")
+        Data.Map.pack(side="right", padx=10, fill="y")

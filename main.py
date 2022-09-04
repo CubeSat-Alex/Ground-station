@@ -16,7 +16,6 @@ def dark_title_bar(window):
     set_window_attribute(hwnd, rendering_policy, ct.byref(value),
                          ct.sizeof(value))
 
-
 root = Tk()
 initial_setup(root)
 main = MainView(root)
