@@ -73,7 +73,7 @@ class DataBase:
     def dispose(self):
         self.connection.close()
 
-    def addPlan(self , plan):
+    def addPlan(self, plan):
         query = "insert into plan " + str(tuple(plan.keys())) + " values" + str(
                 tuple(plan.values())) + ";"
         self.cursor.execute(query)
