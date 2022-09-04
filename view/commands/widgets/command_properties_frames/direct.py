@@ -7,6 +7,8 @@ from logic.constant.constants import time_format
 from logic.constant.orders import Orders
 from logic.data import Data
 from logic.functions.server import request, receive_fromOBC
+from view.commands.widgets.long_term_plan_window import LongTermFrame
+from view.commands.widgets.time_picker import Picker
 
 
 class GetTimeDifferenceFrame(Frame):
@@ -85,88 +87,45 @@ class SetSessionTimeFrame(Frame):
         self.config(borderwidth=0, highlightbackground="white", highlightthickness=0.2, bg="white", height=100)
 
         self.controller = controller
-        label = Label(self, text="Set on board time", font=("", 14, "bold"), background="white")
+        label = Label(self, text="Set next session time", font=("", 14, "bold"), background="white")
         label.pack(side="top", fill="x")
 
         content_frame = Frame(self, bg="white")
         content_frame.pack(anchor="center", pady=20, fill="both", expand=1)
 
-        content_frame2 = Frame(self, bg="white")
-        content_frame2.pack(anchor="center", pady=20, fill="both", expand=1)
+        Label(content_frame, text="Start Session Time", bg="white", font=("Segoe UI", 14)).pack(
+            side="top")
 
-        self.entry_year = Entry(content_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                                width=4, fg='black')
+        Data.start_button = Button(content_frame, text=str(Data.start_session_time.strftime(time_format)),
+                              font=("", 14, "bold"), command=self.start_button_clicked, relief="flat")
+        Data.start_button.pack(side="top", fill="x")
 
-        self.entry_month = Entry(content_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                                 width=2, fg='black')
-        self.entry_day = Entry(content_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                               width=2, fg='black')
+        Label(content_frame, text="End Session Time", bg="white", font=("Segoe UI", 14)).pack(
+            side="top")
 
-        self.entry_hours = Entry(content_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                                 width=2, fg='black')
-        self.entry_minutes = Entry(content_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                                   width=2, fg='black')
-        self.entry_seconds = Entry(content_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                                   width=2, fg='black')
+        Data.end_button = Button(content_frame, text=str(Data.end_session_time.strftime(time_format)),
+                            font=("", 14, "bold"), command=self.end_button_clicked, relief="flat")
+        Data.end_button.pack(side="top", fill="x")
 
-        Label(content_frame, text=" Y: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
-        self.entry_year.pack(side="left")
-        Label(content_frame, text=" M: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
-        self.entry_month.pack(side="left")
-        Label(content_frame, text=" D: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
-        self.entry_day.pack(side="left")
-        Label(content_frame, text="      H: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
-        self.entry_hours.pack(side="left")
-        Label(content_frame, text=" M: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
-        self.entry_minutes.pack(side="left")
-        Label(content_frame, text=" S: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
-        self.entry_seconds.pack(side="left")
+        long_term = Button(self, text="Long Term Plan",
+                                   font=("", 14, "bold"), command=self.setup_long_term_click, relief="flat")
+        long_term.pack(side="bottom", fill="x")
 
-        self.entry_year.insert(0, Data.start_session_time.year)
-        self.entry_month.insert(0, Data.start_session_time.month)
-        self.entry_day.insert(0, Data.start_session_time.day)
-        self.entry_hours.insert(0, Data.start_session_time.hour)
-        self.entry_minutes.insert(0, Data.start_session_time.minute)
-        self.entry_seconds.insert(0, Data.start_session_time.second)
-
-        self.entry_year2 = Entry(content_frame2, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                                width=4, fg='black')
-
-        self.entry_month2 = Entry(content_frame2, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                                 width=2, fg='black')
-        self.entry_day2 = Entry(content_frame2, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                               width=2, fg='black')
-
-        self.entry_hours2 = Entry(content_frame2, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                                 width=2, fg='black')
-        self.entry_minutes2 = Entry(content_frame2, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                                   width=2, fg='black')
-        self.entry_seconds2 = Entry(content_frame2, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                                   width=2, fg='black')
-
-        Label(content_frame2, text=" Y: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
-        self.entry_year2.pack(side="left")
-        Label(content_frame2, text=" M: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
-        self.entry_month2.pack(side="left")
-        Label(content_frame2, text=" D: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
-        self.entry_day2.pack(side="left")
-        Label(content_frame2, text="      H: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
-        self.entry_hours2.pack(side="left")
-        Label(content_frame2, text=" M: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
-        self.entry_minutes2.pack(side="left")
-        Label(content_frame2, text=" S: ", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="left")
-        self.entry_seconds2.pack(side="left")
-
-        self.entry_year2.insert(0, Data.end_session_time.year)
-        self.entry_month2.insert(0, Data.end_session_time.month)
-        self.entry_day2.insert(0, Data.end_session_time.day)
-        self.entry_hours2.insert(0, Data.end_session_time.hour)
-        self.entry_minutes2.insert(0, Data.end_session_time.minute)
-        self.entry_seconds2.insert(0, Data.end_session_time.second)
-
-        button = Button(self, text="List", font=("", 14, "bold"), command=self.set_time_button_clicked,
+        button = Button(content_frame, text="List", font=("", 14, "bold"), command=self.set_time_button_clicked,
                         relief="flat")
-        button.pack(side="bottom", fill="x")
+        button.pack(side="top", fill="x", pady=20)
+
+    def setup_long_term_click(self):
+        long_term_frame = LongTermFrame()
+        long_term_frame.show()
+
+    def start_button_clicked(self):
+        picker = Picker(datetime.now(), "start_session_time")
+        picker.show()
+
+    def end_button_clicked(self):
+        picker = Picker(datetime.now(), 'end_session_time')
+        picker.show()
 
     def set_time_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
@@ -174,22 +133,13 @@ class SetSessionTimeFrame(Frame):
             str(Data.commands_counter), "set session time", datetime.now().strftime(time_format),
             Data.mission_entry.get(), Data.start_session_time
         ))
-
-        start_session_time = datetime(int(self.entry_year.get()), int(self.entry_month.get()), int(self.entry_day.get()),
-                               int(self.entry_hours.get()), int(self.entry_minutes.get()), int(self.entry_seconds.get()))
-
-        end_session_time = datetime(int(self.entry_year2.get()), int(self.entry_month2.get()), int(self.entry_day2.get()),
-                               int(self.entry_hours2.get()), int(self.entry_minutes2.get()),
-                               int(self.entry_seconds2.get()))
-
-        if datetime.today() == start_session_time.date():
-            if start_session_time < Data.start_session_time:
-                Data.start_session_time = start_session_time
-                Data.end_session_time = end_session_time
+        # if datetime.now().strftime("%d-%m-%Y") == Data.start_session_time.strftime("%d-%m-%Y"):
+        #     Data.start_session_time = Data.start_session_time
+        #     Data.end_session_time = Data.end_session_time
 
         request(Orders.setNextSession, str(datetime.now().strftime(time_format)),
-                start= start_session_time.strftime(time_format),
-                end=end_session_time.strftime(time_format))
+                start=Data.start_session_time.strftime(time_format),
+                end=Data.end_session_time.strftime(time_format))
 
 
 class ADCSFrame(Frame):

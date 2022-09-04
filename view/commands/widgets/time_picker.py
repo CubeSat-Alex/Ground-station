@@ -1,120 +1,142 @@
+from datetime import datetime
 from tkinter import *
 from tkcalendar import *
+from logic.constant.constants import time_format
+from logic.data import Data
 
 
-class LongTermFrame(Frame):
+class Picker(Frame):
 
-    def __init__(self, *args):
+    def __init__(self, date, type, *args):
         Frame.__init__(self, *args, borderwidth=10, highlightbackground="black", highlightthickness=0.2,
                        background="white")
 
-        ws = Tk()
-        ws.title("Python Guides")
-        ws.geometry("500x400")
-        ws.config(bg="#cd950c")
+        self.ws = None
+        self.hour_string = StringVar(value=date.hour)
+        self.min_string = StringVar(value=date.minute)
+        self.sec_string = StringVar(value=date.second)
 
-        hour_string = StringVar()
-        min_string = StringVar()
-        sec_string = StringVar()
+        self.actionBtn = None
+        self.sec_hour = None
+        self.min_sb = None
+        self.sec = None
+        self.cal = None
+        self.date = date
+        self.type = type
 
-        last_value_sec = ""
-        last_value = ""
-        f = ('Times', 20)
+        self.f = ('Times', 20)
 
+    def display_msg(self):
+        date = self.cal.get_date()
+        h = self.min_sb.get()
+        m = self.sec_hour.get()
+        s = self.sec.get()
 
-        def display_msg():
-            date = cal.get_date()
-            m = min_sb.get()
-            h = sec_hour.get()
-            s = sec.get()
-            t = f"Your appointment is booked for {date} at {m}:{h}:{s}."
-            msg_display.config(text=t)
+        if self.type == "start_session_time":
+            print(date)
+            Data.start_session_time = datetime(2022, int(str(date).split('/')[0]),
+                                               int(str(date).split('/')[1]),
+                                               int(h), int(m), int(s))
+            Data.start_button.config(text=str(Data.start_session_time.strftime(time_format)))
+            print(Data.start_session_time)
 
+        elif self.type == "end_session_time":
+            Data.end_session_time = datetime(2022, int(str(date).split('/')[0]),
+                                             int(str(date).split('/')[1]),
+                                             int(h), int(m), int(s))
+            Data.end_button.config(text=str(Data.end_session_time.strftime(time_format)))
 
-        fone = Frame(ws)
-        ftwo = Frame(ws)
+        elif self.type == 'long_term_start':
+            Data.long_start_session_time = datetime(2022, int(str(date).split('/')[0]),
+                                             int(str(date).split('/')[1]),
+                                             int(h), int(m), int(s))
+            Data.long_start_button.config(text=str(Data.long_start_session_time.strftime(time_format)))
+
+        elif self.type == 'long_term_end':
+            Data.long_end_session_time = datetime(2022, int(str(date).split('/')[0]),
+                                             int(str(date).split('/')[1]),
+                                             int(h), int(m), int(s))
+            Data.long_end_button.config(text=str(Data.long_end_session_time.strftime(time_format)))
+
+        self.ws.destroy()
+
+    def show(self):
+
+        self.ws = Tk()
+        self.ws.title("Picker")
+        self.ws.geometry("500x400")
+        self.ws.config(bg="#eeeeee")
+
+        fone = Frame(self.ws)
+        ftwo = Frame(self.ws)
 
         fone.pack(pady=10)
         ftwo.pack(pady=10)
 
-        cal = Calendar(
+        self.cal = Calendar(
             fone,
             selectmode="day",
-            year=2021,
-            month=2,
-            day=3
+            year=self.date.year,
+            month=self.date.month,
+            day=self.date.day
         )
-        cal.pack()
+        self.cal.pack()
 
-        min_sb = Spinbox(
+        self.min_sb = Spinbox(
             ftwo,
             from_=0,
             to=23,
             wrap=True,
-            textvariable=hour_string,
-            width=2,
-            # state="readonly",
-            font=f,
+            textvariable=self.hour_string,
+            width=3,
+            font=self.f,
             justify=CENTER
         )
-        sec_hour = Spinbox(
+
+        self.sec_hour = Spinbox(
             ftwo,
             from_=0,
             to=59,
             wrap=True,
-            textvariable=min_string,
-            font=f,
-            width=2,
+            textvariable=self.min_string,
+            font=self.f,
+            width=3,
             justify=CENTER
         )
 
-        sec = Spinbox(
+        self.sec = Spinbox(
             ftwo,
             from_=0,
             to=59,
             wrap=True,
-            textvariable= sec_hour,
-            width=2,
-            font=f,
+            textvariable=self.sec_string,
+            width=3,
+            font=self.f,
             justify=CENTER
         )
 
-        min_sb.pack(side=LEFT, fill=X, expand=True)
-        sec_hour.pack(side=LEFT, fill=X, expand=True)
-        sec.pack(side=LEFT, fill=X, expand=True)
+        self.min_sb.pack(side=LEFT, fill=X, expand=True)
+        self.sec_hour.pack(side=LEFT, fill=X, expand=True)
+        self.sec.pack(side=LEFT, fill=X, expand=True)
 
         msg = Label(
-            ws,
+            self.ws,
             text="Hour  Minute  Seconds",
             font=("Times", 12),
-            bg="#cd950c"
+            bg="#eeeeee"
         )
         msg.pack(side=TOP)
 
-        actionBtn = Button(
-            ws,
-            text="Book Appointment",
+        self.actionBtn = Button(
+            self.ws,
+            text="Select",
             padx=10,
             pady=10,
-            command=display_msg
+            relief='flat',
+            bg="#54FA9B",
+            font=('Times', 20, 'bold'),
+            command=self.display_msg
         )
-        actionBtn.pack(pady=10)
+        self.actionBtn.pack(pady=10)
 
-        msg_display = Label(
-            ws,
-            text="",
-            bg="#cd950c"
-        )
-        msg_display.pack(pady=10)
-
-        if last_value == "59" and min_string.get() == "0":
-            hour_string.set(int(hour_string.get()) + 1 if hour_string.get() != "23" else 0)
-            last_value = min_string.get()
-
-        if last_value_sec == "59" and sec_hour.get() == "0":
-            min_string.set(int(min_string.get()) + 1 if min_string.get() != "59" else 0)
-        if last_value == "59":
-            hour_string.set(int(hour_string.get()) + 1 if hour_string.get() != "23" else 0)
-            last_value_sec = sec_hour.get()
-
-        ws.mainloop()
+        self.ws.mainloop()

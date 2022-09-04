@@ -16,6 +16,8 @@ class DataTableFrame(Frame):
 
         style = Style(self)
         style.configure('Treeview', rowheight=70)  # SOLUTION
+        style.configure("Treeview", font=('Calibri', 11))
+        style.configure("Treeview.Heading", font=('Calibri', 14,))
 
         # self.empty_space = Label(all_frame, text="0", bg="white", font=("Segoe UI", 30, "bold"), background="white",
         #                          foreground="white")

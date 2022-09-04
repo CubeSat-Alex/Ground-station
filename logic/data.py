@@ -15,6 +15,10 @@ class Data:
     satellite_orbit = None
     Map = None
     root = None
+    # session time frame
+    end_button = None
+    start_button = None
+
     start_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 12, 7, 00)
     end_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 12, 10, 00)
     duration_until_bext_session = timedelta(20, 20, 20)
@@ -45,3 +49,9 @@ class Data:
     commands_counter = 0
     realtime_bool = False
 
+    # Long term plan
+    long_term_plan_map = []
+    long_start_button = None
+    long_end_button = None
+    long_start_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 12, 10, 00)
+    long_end_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 12, 30, 00)
