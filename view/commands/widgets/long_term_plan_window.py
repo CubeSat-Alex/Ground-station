@@ -7,6 +7,8 @@ from view.commands.widgets.time_picker import Picker
 
 
 class LongTermFrame:
+    def __init__(self, *args):
+        Data.long_term_plan_map = Data.dataBase.getPlanes()
 
     def show(self):
 
@@ -78,10 +80,12 @@ class LongTermFrame:
         picker.show()
 
     def add_to_list(self):
+
         item = {
             'from': Data.long_start_session_time.strftime(time_format),
             'to': Data.long_end_session_time.strftime(time_format)
                 }
+        Data.dataBase.addPlan(item)
         Data.long_term_plan_map.append(item)
         self.fill_table()
 
@@ -91,7 +95,6 @@ class LongTermFrame:
             self.fill_table()
 
     def fill_table(self):
-
         # delete rows
         for i in Data.long_term_table.get_children():
             Data.long_term_table.delete(i)

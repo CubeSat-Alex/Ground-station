@@ -1,6 +1,7 @@
 from functools import cache
 import json
 
+
 class Cache:
     def add(self , key , value):
         f = open( "database/cache.txt" ,'r+')

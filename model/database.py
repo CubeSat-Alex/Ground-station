@@ -73,7 +73,7 @@ class DataBase:
     def dispose(self):
         self.connection.close()
 
-    def addPlan(self , plan):
+    def addPlan(self, plan):
         query = "insert into plan " + str(tuple(plan.keys())) + " values" + str(
                 tuple(plan.values())) + ";"
         self.cursor.execute(query)
@@ -82,13 +82,12 @@ class DataBase:
     def getPlanes(self):
          df = pd.read_sql_query("SELECT * from plan", self.connection)
          return df.to_dict('records')
-        
-    def deletePlan(self , id):
+
+    def deletePlan(self, id):
         query = f'''DELETE FROM plan
                     WHERE id={id};'''
         self.cursor.execute(query)
         self.connection.commit()
-
 
     def addLogs(self, logs):
         data =logs.split('\n')
