@@ -83,12 +83,10 @@ class DataBase:
          df = pd.read_sql_query("SELECT * from plan", self.connection)
          return df.to_dict('records')
         
-    def deletePlan(self , id):
-        query = f'''DELETE FROM plan
-                    WHERE id={id};'''
+    def deletePlan(self):
+        query = '''DELETE FROM plan WHERE ID=(SELECT MAX(id) FROM plan)'''
         self.cursor.execute(query)
         self.connection.commit()
-
 
     def addLogs(self, logs):
         data =logs.split('\n')
