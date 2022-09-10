@@ -2,7 +2,6 @@ import _thread
 import json
 from tkinter import *
 from datetime import datetime
-from tkinter import messagebox
 from tkinter.ttk import Progressbar
 from logic.constant.constants import time_format
 from logic.constant.orders import Orders
@@ -39,17 +38,6 @@ class GetTimeDifferenceFrame(Frame):
             Data.mission_entry.get(), " - "
         ))
         add_request(Orders.getTime, "0", str(datetime.now().strftime(time_format)))
-
-        # request(Orders.getTime, "0", str(datetime.now().strftime(time_format)))
-        # receive_fromOBC()
-        # print(Data.data_received)
-        #
-        # obcDate = datetime.strptime(Data.data_received[1:-1], time_format)
-        #
-        # print(obcDate)
-        # difference = datetime.now() - obcDate
-        # print(difference.total_seconds())
-        # messagebox.showinfo("time difference", 'time difference is \n' + str(difference.total_seconds()) + " S")
 
 
 class SetOnBoardTimeFrame(Frame):
@@ -307,8 +295,7 @@ class OpenRealTimeFrame(Frame):
         self.after(3000, self.realtime_communication)
 
     def realtime_communication(self):
-
-        add_request(Orders.openRealTime, '0')
+        request(Orders.openRealTime, '0')
         try:
             receive_fromOBC()
         except:
@@ -365,7 +352,7 @@ class StorageFrame(Frame):
         Data.image_prog = Progressbar(content_frame, orient='horizontal', mode='determinate', length=120, value=80)
         Data.image_prog.grid(row=0, column=1, padx=5)
 
-        Data.image_lbl_var = Label(content_frame, text="5 MB", font=("", 17, "bold"), background="white",
+        Data.image_lbl_var = Label(content_frame, text="5 GB", font=("", 17, "bold"), background="white",
                               foreground="#000799")
         Data.image_lbl_var.grid(row=0, column=2)
 
@@ -384,11 +371,11 @@ class StorageFrame(Frame):
         Data.videos_prog = Progressbar(content_frame, orient='horizontal', mode='determinate', length=120, value=1)
         Data.videos_prog.grid(row=1, column=1, padx=5)
 
-        Data.videos_lbl_var = Label(content_frame, text="5 MB ", font=("", 17, "bold"), background="white",
+        Data.videos_lbl_var = Label(content_frame, text="10 GB ", font=("", 17, "bold"), background="white",
                               foreground="#000799")
         Data.videos_lbl_var.grid(row=1, column=2)
 
-        videos_lbl2 = Label(content_frame, text="/ 5 GB", font=("", 14, "bold"), background="white")
+        videos_lbl2 = Label(content_frame, text="/ 10 GB", font=("", 14, "bold"), background="white")
         videos_lbl2.grid(row=1, column=3)
 
         # videos_details = Label(content_frame, text="M: 3 min , E: 6.3 Hr", font=("", 10), background="white",
@@ -403,11 +390,11 @@ class StorageFrame(Frame):
         Data.telemetry_prog = Progressbar(content_frame, orient='horizontal', mode='determinate', length=120, value=1)
         Data.telemetry_prog.grid(row=2, column=1, padx=5)
 
-        Data.telemetry_var = Label(content_frame, text="5 MB", font=("", 17, "bold"), background="white",
-                              foreground="#000799")
+        Data.telemetry_var = Label(content_frame, text="2 GB", font=("", 17, "bold"), background="white",
+                                   foreground="#000799")
         Data.telemetry_var.grid(row=2, column=2)
 
-        telemetry2 = Label(content_frame, text="/ 5 GB", font=("", 14, "bold"), background="white")
+        telemetry2 = Label(content_frame, text="/ 2 GB", font=("", 14, "bold"), background="white")
         telemetry2.grid(row=2, column=3)
 
         # telemetry_details = Label(content_frame, text="M: 16 hr , E: 4.3 day", font=("", 10), background="white",
@@ -422,11 +409,11 @@ class StorageFrame(Frame):
         Data.logs_prog = Progressbar(content_frame, orient='horizontal', mode='determinate', length=120, value=10)
         Data.logs_prog.grid(row=3, column=1, padx=5)
 
-        Data.logs_lbl_var = Label(content_frame, text="5 MB", font=("", 17, "bold"), background="white",
-                              foreground="#000799")
+        Data.logs_lbl_var = Label(content_frame, text="3 GB", font=("", 17, "bold"), background="white",
+                                  foreground="#000799")
         Data.logs_lbl_var.grid(row=3, column=2)
 
-        logs_lbl2 = Label(content_frame, text="/ 5 GB", font=("", 14, "bold"), background="white")
+        logs_lbl2 = Label(content_frame, text="/ 3 GB", font=("", 14, "bold"), background="white")
         logs_lbl2.grid(row=3, column=3)
 
         # logs_details = Label(content_frame, text="M: 20 hr , E: 5 day", font=("", 10), background="white",

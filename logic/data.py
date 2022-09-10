@@ -1,4 +1,5 @@
 from datetime import datetime, timedelta
+from threading import Timer
 
 from logic.shared_prefrence import Cache
 
@@ -61,9 +62,12 @@ class Data:
     # general
     statistics = {}
 
-
     # lib
     cache = None
+
+    timer = None
+
+    connectFlag = True
 
     # statistics
     image_lbl_var = None

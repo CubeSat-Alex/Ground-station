@@ -30,6 +30,7 @@ class Orders:
 
     # storage
     getStorage = 't'
+    ping = 'u'
 
 
 

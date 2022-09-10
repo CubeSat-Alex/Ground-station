@@ -1,3 +1,4 @@
+import _thread
 from tkinter import *
 from logic.constant.constants import *
 from logic.data import Data

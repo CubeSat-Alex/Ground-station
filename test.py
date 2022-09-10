@@ -56,5 +56,3 @@ Map.pack()
 frame.pack()
 
 root_tk.mainloop()
-
-

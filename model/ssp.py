@@ -46,8 +46,8 @@ class SSP:
             return ''.join(chr(i) for i in data)
 
     def replaceFundinData(self, data):
-        print("in replace fund")
-        print(data)
+        # print("in replace fund")
+        # print(data)
         # check if 0xdb 0xdc replace with 0xdb 0xdd
         indexes = [index for (index, item) in enumerate(data) if item == 0xdb]
         for i in indexes:

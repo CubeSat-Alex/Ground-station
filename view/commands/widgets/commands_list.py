@@ -37,13 +37,6 @@ class CommandsListFrame(Frame):
         Data.command_list_table.heading("name", text="Mission name", anchor=CENTER)
         Data.command_list_table.heading("arguments", text="Arguments", anchor=CENTER)
 
-        # Data.command_list_table.insert(parent='', index='end', text='', values=(
-        #     "1", "take image", datetime.now(), "alex", "angle: 30,60"
-        # ))
-        # Data.command_list_table.insert(parent='', index='end', text='', values=(
-        #     "2", "take video", datetime.now(), "alex", "angle: 30,60 , duration : 3 min"
-        # ))
-
         Data.command_list_table.pack(fill='x', expand=1)
 
         btn = customtkinter.CTkButton(self, text=' Send ', text_font=('', 16),
@@ -52,7 +45,8 @@ class CommandsListFrame(Frame):
 
     def send_commands(self):
         for req in Data.all_requests:
-            request(req["order"], req['atTime'],
+            request(req["order"],
+                    req['atTime'],
                     duration=req['duration'],
                     x=req['x'], y=req['y'],
                     name=req['name'],
@@ -62,13 +56,12 @@ class CommandsListFrame(Frame):
                     end=req['end'])
 
             if req["order"] == Orders.getTime:
+                time_to_send = datetime.now()
                 receive_fromOBC()
                 print(Data.data_received)
-
                 obcDate = datetime.strptime(Data.data_received[1:-1], time_format)
-
                 print(obcDate)
-                difference = datetime.now() - obcDate
+                difference = time_to_send - obcDate
                 print(difference.total_seconds())
                 messagebox.showinfo("time difference", 'time difference is \n' + str(difference.total_seconds()) + " S")
 
@@ -104,9 +97,11 @@ class CommandsListFrame(Frame):
             elif req["order"] == Orders.getImages:
                 get_saved_images()
 
-            elif req["order"] == Orders.getImages:
+            elif req["order"] == Orders.getLogs:
+                print('inside get logs')
                 receive_fromOBC()
                 Data.dataBase.addLogs(Data.data_received)
+                print('adding to table')
                 self.add_to_table()
 
             elif req["order"] == Orders.getTelemetry:
@@ -117,6 +112,7 @@ class CommandsListFrame(Frame):
 
     def add_to_table(self):
         jsn = Data.dataBase.getLogs()
+        print(jsn)
 
         for i in Data.logs_table.get_children():
             Data.logs_table.delete(i)

@@ -3,7 +3,7 @@ from datetime import datetime
 from logic.constant.constants import time_format
 from logic.constant.orders import Orders
 from logic.data import Data
-from logic.functions.server import request, add_request
+from logic.functions.server import add_request
 
 
 class TakeImageFrame(Frame):
@@ -18,10 +18,6 @@ class TakeImageFrame(Frame):
 
         content_frame = Frame(self, bg="white")
         content_frame.pack(anchor="center", pady=20, fill="both", expand=1)
-
-        # storage = Label(content_frame, text="Images Storage", font=("", 20), bg="white").pack(side="top")
-        # storage_text = Label(content_frame, text="Used 500MB/10GB", font=("", 15), bg="white").pack(side="left", padx=50)
-        # pb = Progressbar(content_frame, orient='horizontal', mode='determinate', length=280, value=80).pack(side="left", padx=50)
 
         Label(self, text="camera angle", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="top", fill='x')
 

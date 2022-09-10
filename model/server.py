@@ -1,7 +1,14 @@
+import _thread
+import json
 import pickle
 import socket
 import struct
+from datetime import datetime
+from threading import Timer
+
+from logic.constant.orders import Orders
 from logic.data import Data
+from model.ssp import *
 
 
 class Server:
@@ -29,14 +36,39 @@ class Server:
             return 0
 
     def senData(self, data):
+        Data.timer.cancel()
         try:
             self.client.send(','.join([str(elem).strip() for elem in data]).encode())
             print("SEND SUCCESSFULLY")
-
         except:
             print("NOT SENT")
+            # _thread.start_new_thread(self.reconnect, ())
+        Data.timer = Timer(2, Data.server.bicon)
+        Data.timer.start()
 
-    def getVideo(self, fileName):
+    def bicon(self):
+
+        data = {
+            'order': Orders.ping,
+            'args': {},
+        }
+        jsonData = json.dumps(data)
+        print(jsonData)
+        packet = Data.ssp.data2Packet(jsonData, Address.OBC, Type.Read)
+
+        try:
+            self.client.send(','.join([str(elem).strip() for elem in packet]).encode())
+            print("connection is a live")
+        except:
+            print("reconnecting in process")
+            self.connect()
+
+        Data.timer = Timer(2, Data.server.bicon)
+        Data.timer.start()
+
+    def getVideo(self, fileName, stream):
+        print('in get videos')
+
         data = b""
         payload_size = struct.calcsize("Q")
         fourcc = Data.cv.VideoWriter_fourcc(*'XVID')
@@ -46,7 +78,7 @@ class Server:
 
         while True:
             while len(data) < payload_size:
-                packet = self.client.recv(64 * 1024)  # 4K
+                packet = self.client.recv(4 * 1024)  # 4K
                 if not packet:
                     break
                 data += packet
@@ -55,7 +87,7 @@ class Server:
             msg_size = struct.unpack("Q", packed_msg_size)[0]
 
             while len(data) < msg_size:
-                newData = self.client.recv(64 * 1024)
+                newData = self.client.recv(4 * 1024)
                 data += newData
 
             frame_data = data[:msg_size]
@@ -67,27 +99,30 @@ class Server:
                 break
 
             # frame = Data.cv.cvtColor(pickle.loads(frame_data), Data.cv.COLOR_BGR2RGB)
-            frame = pickle.loads(frame_data)
 
             frames_counter = frames_counter + 1
+            print(f' time : {datetime.now()}, frame : {frames_counter}')
+            frame = pickle.loads(frame_data)
 
             out.write(frame)
 
             # self.photo = ImageTk.PhotoImage(image=Image.fromarray(frame))
             # canvas.itemconfig(self.image_on_canvas, image=self.photo)
 
-            # Data.cv.imshow("RECEIVING VIDEO", frame)
+            if stream:
+                Data.cv.imshow("RECEIVING VIDEO", frame)
             Data.cv.waitKey(1)
 
-        print('frames : ')
-        print(frames_counter)
 
     def getImage(self, name):
+        Data.timer.cancel()
+
         data = b""
         payload_size = struct.calcsize("Q")
         while len(data) < payload_size:
             packet = self.client.recv(4 * 1024)  # 4K
-            if not packet: break
+            if not packet:
+                break
             data += packet
         packed_msg_size = data[:payload_size]
         data = data[payload_size:]
@@ -105,6 +140,10 @@ class Server:
         path = "output/images/" + name + ".png"
         print(path)
         Data.cv.imwrite(path, frame)
+
+        Data.timer = Timer(2, Data.server.bicon)
+        Data.timer.start()
+
         return path
 
     def closeConn(self):
@@ -113,8 +152,3 @@ class Server:
     def dispose(self):
         self.serverSocket.close()
 
-# server = Server()
-# server.start()
-# address = server.connect()
-
-# server.getImage()

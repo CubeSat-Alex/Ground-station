@@ -1,4 +1,6 @@
 import _thread
+from threading import Timer
+
 import cv2
 from tkinter import messagebox
 import time
@@ -22,6 +24,9 @@ def add_new_line_command_table(line):
 
 
 def change_text_lbl():
+    # check
+    # Data.server.bicon()
+
     if datetime.now() < Data.start_session_time:
         Data.data_timer_lbl.config(text=" Next Session will be after", background="red")
         Data.duration_until_bext_session = Data.start_session_time - datetime.now()

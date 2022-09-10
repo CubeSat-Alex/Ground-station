@@ -14,10 +14,12 @@ def start_server():
     Data.server = Server()
     Data.server.start()
     print(Data.server.connect())
+    Data.server.bicon()
 
 
-def add_request(order, atTime,
-     duration="0",
+def add_request(order,
+    atTime,
+    duration="0",
     x=0, y=0,
     name="none",
     command='none',
@@ -36,16 +38,9 @@ def add_request(order, atTime,
            'end': end}
 
     Data.all_requests.append(req)
-    # { order, atTime,
-    #  duration="0",
-    # x=0, y=0,
-    # name="none",
-    # command='none',
-    # sys="none",
-    # start='0', end=0 }
 
 
-def request(order, atTime,
+def request(order, atTime = datetime.now().strftime(time_format),
             duration="0",
             x=0, y=0,
             name="none",
@@ -57,6 +52,7 @@ def request(order, atTime,
     data = {
         'order': order,
         'args': {'duration': duration,
+                 'requestTime': datetime.now().strftime(time_format),
                  'time': atTime,
                  'mission': name,
                  "sys": sys,
@@ -79,6 +75,7 @@ def receive_fromOBC():
     arr2 = ''
     while True:
         end_text = Data.server.recieveData()
+        print(end_text)
 
         if str(end_text).find("end of data") != -1:
             print("Found!")
@@ -86,11 +83,12 @@ def receive_fromOBC():
             break
         else:
             print("Not found!")
+            # if str(end_text).strip() == '':
+            #     break
 
         arr2 = arr2 + str(end_text)
 
     arr = arr2.split(',')
-    print(arr)
     packet = Data.ssp.packet2data(arr)
     print(packet)
     Data.data_received = packet
@@ -106,23 +104,36 @@ def capture_thread_clicked():
 
 def stream_thread_clicked():
 
+    Data.timer.cancel()
+
     request(Orders.getStream, "0")
-    Data.server.getVideo("output/videos/"+str(datetime.now().strftime(time_format) + ".avi"))
+    Data.server.getVideo("output/videos/"+str(datetime.now().strftime(time_format) + ".avi"), True)
+
+    Data.timer = Timer(2, Data.server.bicon)
+    Data.timer.start()
 
 
 def stream_phone_thread_clicked():
 
+    Data.timer.cancel()
+
     request(Orders.getStream, "0")
     Data.server.getVideo("output/videos/"+str(datetime.now().strftime(time_format) + ".avi"))
+
+    Data.timer = Timer(2, Data.server.bicon)
+    Data.timer.start()
 
 
 def get_telemetry():
 
     receive_fromOBC()
+    time_1 = datetime.now()
 
     Data.dataBase.addData(Data.data_received)
 
     data = Data.dataBase.getData()
+    time_2 = datetime.now() - time_1
+    print(time_2.total_seconds())
 
     for i in Data.data_table.get_children():
         Data.data_table.delete(i)
@@ -177,17 +188,24 @@ def get_saved_images():
 
 def get_saved_videos():
 
+    Data.timer.cancel()
     receive_fromOBC()
-
     print(Data.data_received)
+
     maap = json.loads(Data.data_received)
+    print(maap)
+
     for name in maap["VideosNames"]:
-        Data.server.getVideo("output/videos/"+str(name))
+        print(name)
+        Data.server.getVideo("output/videos/"+str(name), False)
 
     videos = getAllNames(videosFolder)
     images = getAllNames(imageFolder)
     Data.files = images + videos
     fill_table()
+
+    Data.timer = Timer(2, Data.server.bicon)
+    Data.timer.start()
 
 
 def send_command_list():
