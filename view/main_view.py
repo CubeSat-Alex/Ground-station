@@ -84,7 +84,7 @@ class MainView(Frame):
         self.logs_button.pack(side="left", ipadx=20, ipady=10)
         self.geo_control_button.pack(side="left", ipadx=20, ipady=10)
 
-        self.p2.show()
+        self.p1.show()
         Data.repeater_session = RepeatedTimer(1, change_text_lbl)
 
         Data.header_timer_frame.place(x=0, y=0)

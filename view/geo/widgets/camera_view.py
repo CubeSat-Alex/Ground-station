@@ -1,7 +1,9 @@
 import _thread
+import json
 from tkinter import *
 from logic.functions.general import *
 from logic.constant.orders import *
+from logic.functions.server import *
 from model.ssp import *
 from model.gif import GifPlay
 
@@ -64,7 +66,7 @@ class CameraView(Frame):
 
     def stop_button_clicked(self):
         data = {
-            'order': stopStream,
+            'order': Orders.stopStream,
             'args': {'duration': 5, 'time': '24/8/22 13:34:00'},
         }
         jsonData = json.dumps(data)

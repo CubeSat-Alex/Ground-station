@@ -4,7 +4,7 @@ from datetime import datetime
 from logic.constant.constants import time_format
 from logic.constant.orders import Orders
 from logic.data import Data
-from logic.functions.server import request, receive_fromOBC, get_telemetry
+from logic.functions.server import request, receive_fromOBC, get_telemetry, add_request
 
 
 class GETTelemetryFrame(Frame):
@@ -34,7 +34,8 @@ class GETTelemetryFrame(Frame):
             str(Data.commands_counter), "get telemetry", datetime.now().strftime(time_format),
             Data.mission_entry.get(), " - "
         ))
-        _thread.start_new_thread(get_telemetry, ())
+        add_request(Orders.getTelemetry, '')
+        # _thread.start_new_thread(get_telemetry, ())
 
     def del_telemetry_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
@@ -42,4 +43,4 @@ class GETTelemetryFrame(Frame):
             str(Data.commands_counter), "delete telemetry", datetime.now().strftime(time_format),
             Data.mission_entry.get(), " - "
         ))
-        request(Orders.deleteTelemetry, '0')
+        add_request(Orders.deleteTelemetry, '0')

@@ -1,5 +1,8 @@
 from tkinter import *
 from tkinter.ttk import Treeview, Style
+
+import customtkinter
+
 from logic.data import Data
 from tkinter import messagebox
 from logic.functions.general import add_new_line_table
@@ -23,16 +26,20 @@ class DataTableFrame(Frame):
         #                          foreground="white")
 
         Data.data_table = Treeview(all_frame, height=60)
-        self.control_button = Button(all_frame, text=" Export to CSV", command=self.export_button_click, relief="flat",
-                                     bg="white", activebackground="white")
+        # self.control_button = Button(all_frame, text=" Export to CSV", command=self.export_button_click, relief="flat",
+        #                              bg="white", activebackground="white")
+
+        self.control_button = customtkinter.CTkButton(master=all_frame, text=" Export to CSV ", text_font=('', 15),
+                                                      command=self.export_button_click)
+
 
         Data.data_table['columns'] = ('Time', 'Temperature', 'Pressure', 'Acceleration', 'Angle', 'altitude', 'LDR')
 
         Data.data_table.column("#0", width=0, stretch=NO)
-        Data.data_table.column("Time", anchor=CENTER, width=130)
-        Data.data_table.column("Temperature", anchor=CENTER, width=80)
-        Data.data_table.column("Pressure", anchor=CENTER, width=80)
-        Data.data_table.column("Acceleration", anchor=CENTER, width=80)
+        Data.data_table.column("Time", anchor=CENTER, width=100)
+        Data.data_table.column("Temperature", anchor=CENTER, width=120)
+        Data.data_table.column("Pressure", anchor=CENTER, width=100)
+        Data.data_table.column("Acceleration", anchor=CENTER, width=100)
         Data.data_table.column("Angle", anchor=CENTER, width=80)
         Data.data_table.column("altitude", anchor=CENTER, width=80)
         Data.data_table.column("LDR", anchor=CENTER, width=80)
@@ -64,14 +71,16 @@ class DataTableFrame(Frame):
             Data.data_table.delete(i)
 
         for i in range(data.shape[0]):
-            line = (data["date"][i], data["tempreture"][i], data["pressure"][i], data["acceleration"][i],
+            date_parts =str(data["date"][i]).split('-')
+            line = (date_parts[0].replace('/', '-')+'\n   '+date_parts[1].replace('.', ':')
+                    , data["tempreture"][i], data["pressure"][i], data["acceleration"][i],
                     "X: " + str(data["angleX"][i])
                     + "\nY: " + str(data["angleY"][i])
                     + "\nZ: " + str(data["angleZ"][i]),
                     data["altitude"][i],
                     "F:" + str(data["ldr1"][i])
-                    + "\nB:" + str(data["ldr2"][i])
+                    + ",  B:" + str(data["ldr2"][i])
                     + "\nR:" + str(data["ldr3"][i])
-                    + "\nL:" + str(data["ldr4"][i]))
+                    + ",  L:" + str(data["ldr4"][i]))
             add_new_line_table(line)
 

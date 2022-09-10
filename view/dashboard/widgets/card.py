@@ -1,7 +1,7 @@
 from tkinter import *
 import pandas as pd
-from matplotlib.backends.backend_tkagg import *
-from tkintermapview import TkinterMapView
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import tkintermapview
 
 
 class Card(Frame):
@@ -31,22 +31,20 @@ class Card(Frame):
 class MapCard(Frame):
     long = 3220
     lat = 30
-    map_widget = None
 
-    def __init__(self, long, lat,  *args):
-        Frame.__init__(self, *args, borderwidth=10, highlightbackground="black", highlightthickness=0.2,
-                       background="white")
-        self.long = long
-        self.lat = lat
+    def __init__(self, *args, long, lat):
+        Frame.__init__(self, *args)
+        # self.value_lbl = Label(self, text=str(long)+", "+str(lat), font=("Segoe UI Light", 25), background="white",
+        #                        foreground="#277BC0")
 
-        self.value_lbl = Label(self, text=str(long)+", "+str(lat), font=("Segoe UI Light", 25), background="white",
-                               foreground="#277BC0")
+        self.map_widget = tkintermapview.TkinterMapView(self, width=500, height=900, corner_radius=10)
 
-        self.map_widget = TkinterMapView(self, width=500, height=900, corner_radius=10)
-        #         --------- packing -----------
-        self.map_widget.pack(side="bottom")
-
-        # self.map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
-        self.map_widget.set_tile_server("https://a.tile.openstreetmap.org/{z}/{x}/{y}.png", max_zoom=22)
+        self.map_widget.set_tile_server("https://mt0.google.com/vt/lyrs=m&hl=en&x={x}&y={y}&z={z}&s=Ga", max_zoom=22)
+        # self.map_widget.set_tile_server("https://a.tile.openstreetmap.org/{z}/{x}/{y}.png", max_zoom=22)
         self.map_widget.set_position(long, lat)
         self.map_widget.set_marker(long, lat, text="Here")
+
+        #         --------- packing -----------
+        self.map_widget.pack()
+
+

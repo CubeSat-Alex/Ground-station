@@ -5,6 +5,7 @@ from view.commands.widgets.commands_list import CommandsListFrame
 from view.commands.widgets.commands_tree_view import TreeView
 from model.page import Page
 from view.commands.widgets.real_table import RealtimeTable
+import customtkinter
 
 
 class Control(Page):
@@ -18,7 +19,7 @@ class Control(Page):
         right_frame = Frame(self, bg="white")
         left_frame = Frame(self, bg="white")
         bottom_frame = Frame(self, bg="white")
-        mission_name_frame = Frame(self, bg="white")
+        mission_name_frame = Frame(self, bg="white", height=300)
 
         #         --------- Elements -----------
 
@@ -27,12 +28,12 @@ class Control(Page):
         commands_frame = CommandsFrame(bottom_frame)
         realtime_table = RealtimeTable(right_frame)
 
-        Data.mission_entry = Entry(mission_name_frame, bg="white", font=("Segoe UI", 18), foreground="#0ba9bc",
-                                   width=20, fg='black')
-        Label(mission_name_frame, text=" Mission Name: ", bg="white", font=("Segoe UI", 14)).pack(side="left")
+        Data.mission_entry = customtkinter.CTkEntry(master=mission_name_frame, text_font=("Segoe UI", 18), width=500)
+        customtkinter.CTkLabel(mission_name_frame, text=" Mission Name: ", text_font=("Segoe UI", 14), text_color='black').pack(side="left")
         Data.mission_entry.pack(side="left")
 
         Data.mission_entry.insert(0, "General Mission")
+        Label(mission_name_frame, text=" Mission Name: ", bg="red", font=("Segoe UI", 14), foreground='white').pack(side="top",ipady=300, pady=300)
 
         #         --------- packing -----------
         right_frame.pack(side="right", fill="y")

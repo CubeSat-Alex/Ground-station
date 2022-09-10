@@ -1,7 +1,9 @@
 from tkinter import *
 from datetime import datetime
-from tkinter.ttk import Progressbar
+from logic.constant.constants import time_format
+from logic.constant.orders import Orders
 from logic.data import Data
+from logic.functions.server import request, add_request
 
 
 class TakeImageFrame(Frame):
@@ -17,9 +19,11 @@ class TakeImageFrame(Frame):
         content_frame = Frame(self, bg="white")
         content_frame.pack(anchor="center", pady=20, fill="both", expand=1)
 
-        storage = Label(content_frame, text="Images Storage", font=("", 20), bg="white").pack(side="top")
-        storage_text = Label(content_frame, text="Used 500MB/10GB", font=("", 15), bg="white").pack(side="left", padx=50)
-        pb = Progressbar(content_frame, orient='horizontal', mode='determinate', length=280, value=80).pack(side="left", padx=50)
+        # storage = Label(content_frame, text="Images Storage", font=("", 20), bg="white").pack(side="top")
+        # storage_text = Label(content_frame, text="Used 500MB/10GB", font=("", 15), bg="white").pack(side="left", padx=50)
+        # pb = Progressbar(content_frame, orient='horizontal', mode='determinate', length=280, value=80).pack(side="left", padx=50)
+
+        Label(self, text="camera angle", bg="white", font=("Segoe UI", 14), foreground="#0ba9bc").pack(side="top", fill='x')
 
         angle_frame = Frame(self, bg="white")
         angle_frame.pack(anchor="center", pady=20, fill="both", expand=1)
@@ -83,9 +87,22 @@ class TakeImageFrame(Frame):
     def send_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
         Data.command_list_table.insert(parent='', index='end', text='', values=(
-            str(Data.commands_counter), "take image", datetime.now().strftime("%d_%m_%Y %H-%M-%S"),
+            str(Data.commands_counter), "take image", datetime.now().strftime(time_format),
             Data.mission_entry.get(), " angle :" + self.angleX_entry.get()+", "+self.angleY_entry.get()
         ))
+        year = self.entry_year.get()
+        month = self.entry_month.get()
+        day = self.entry_day.get()
+        hour = self.entry_hours.get()
+        minute = self.entry_minutes.get()
+        second = self.entry_seconds.get()
+
+        anglex = self.angleX_entry.get()
+        angley = self.angleY_entry.get()
+
+        add_request(Orders.takeImageAt, datetime(int(year), int(month), int(day), int(hour), int(minute),
+                                             int(second)).strftime(time_format),
+                x=anglex, y=angley, name=Data.mission_entry.get())
 
 
 class TakeVideoFrame(Frame):
@@ -177,3 +194,19 @@ class TakeVideoFrame(Frame):
             Data.mission_entry.get(), " angle :" + self.angleX_entry.get()+", "+self.angleY_entry.get()
             + "  Duration :" + self.duration_entry.get()
         ))
+
+        year = self.entry_year.get()
+        month = self.entry_month.get()
+        day = self.entry_day.get()
+        hour = self.entry_hours.get()
+        minute = self.entry_minutes.get()
+        second = self.entry_seconds.get()
+
+        anglex = self.angleX_entry.get()
+        angley = self.angleY_entry.get()
+
+        duration = self.duration_entry.get()
+
+        add_request(Orders.takeVideoAt, datetime(int(year), int(month), int(day), int(hour), int(minute),
+                                             int(second)).strftime(time_format),
+                x=anglex, y=angley, duration=duration, name=Data.mission_entry.get())

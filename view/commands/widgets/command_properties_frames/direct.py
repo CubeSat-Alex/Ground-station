@@ -3,11 +3,11 @@ import json
 from tkinter import *
 from datetime import datetime
 from tkinter import messagebox
+from tkinter.ttk import Progressbar
 from logic.constant.constants import time_format
 from logic.constant.orders import Orders
 from logic.data import Data
-from logic.functions.server import request, receive_fromOBC
-from logic.shared_prefrence import cache
+from logic.functions.server import request, receive_fromOBC, add_request
 from view.commands.widgets.long_term_plan_window import LongTermFrame
 from view.commands.widgets.time_picker import Picker
 
@@ -25,11 +25,6 @@ class GetTimeDifferenceFrame(Frame):
         content_frame = Frame(self, bg="white")
         content_frame.pack(anchor="center", pady=20, fill="both", expand=1)
 
-        # text1 = Label(content_frame, text="time now : ", font=("", 12), background="white")
-        # text1.pack(anchor="w")
-        # text2 = Label(content_frame, text=datetime.now().strftime("%H:%M:%S"), font=("", 12), background="white")
-        # text2.pack(anchor="w")
-
         button = Button(self, text="List", font=("", 14, "bold"), command=self.get_time_difference_button_clicked,
                         relief="flat")
         button.pack(side="bottom", fill="x")
@@ -43,17 +38,18 @@ class GetTimeDifferenceFrame(Frame):
             str(Data.commands_counter), "get time difference", datetime.now().strftime(time_format),
             Data.mission_entry.get(), " - "
         ))
+        add_request(Orders.getTime, "0", str(datetime.now().strftime(time_format)))
 
-        request(Orders.getTime, "0", str(datetime.now().strftime(time_format)))
-        receive_fromOBC()
-        print(Data.data_received)
-
-        obcDate = datetime.strptime(Data.data_received[1:-1], time_format)
-
-        print(obcDate)
-        difference = datetime.now() - obcDate
-        print(difference.total_seconds())
-        messagebox.showinfo("time difference", 'time difference is \n' + str(difference.total_seconds()) + " S")
+        # request(Orders.getTime, "0", str(datetime.now().strftime(time_format)))
+        # receive_fromOBC()
+        # print(Data.data_received)
+        #
+        # obcDate = datetime.strptime(Data.data_received[1:-1], time_format)
+        #
+        # print(obcDate)
+        # difference = datetime.now() - obcDate
+        # print(difference.total_seconds())
+        # messagebox.showinfo("time difference", 'time difference is \n' + str(difference.total_seconds()) + " S")
 
 
 class SetOnBoardTimeFrame(Frame):
@@ -77,7 +73,7 @@ class SetOnBoardTimeFrame(Frame):
             str(Data.commands_counter), "set on-board time", datetime.now().strftime(time_format),
             Data.mission_entry.get(), " - "
         ))
-        request(Orders.setOnBoardTime, str(datetime.now().strftime(time_format)))
+        add_request(Orders.setOnBoardTime, str(datetime.now().strftime(time_format)))
 
 
 class SetSessionTimeFrame(Frame):
@@ -92,6 +88,7 @@ class SetSessionTimeFrame(Frame):
         label.pack(side="top", fill="x")
 
         content_frame = Frame(self, bg="white")
+        bottom_frame = Frame(self, bg="white")
         content_frame.pack(anchor="center", pady=20, fill="both", expand=1)
 
         Label(content_frame, text="Start Session Time", bg="white", font=("Segoe UI", 14)).pack(
@@ -108,9 +105,14 @@ class SetSessionTimeFrame(Frame):
                             font=("", 14, "bold"), command=self.end_button_clicked, relief="flat")
         Data.end_button.pack(side="top", fill="x")
 
-        long_term = Button(self, text="Long Term Plan",
+        long_term = Button(bottom_frame, text="          Long Term Plan           ",
                                    font=("", 14, "bold"), command=self.setup_long_term_click, relief="flat")
-        long_term.pack(side="bottom", fill="x")
+        bottom_frame.pack(anchor='center', fill="x")
+        long_term.pack(side="left", fill="x")
+
+        list_long_term = Button(bottom_frame, text="  list  + ",
+                                   font=("", 14, "bold"), bg='white', command=self.setup_long_term_click, relief="flat", padx=20)
+        list_long_term.pack(side="left")
 
         button = Button(content_frame, text="List", font=("", 14, "bold"), command=self.set_time_button_clicked,
                         relief="flat")
@@ -138,7 +140,7 @@ class SetSessionTimeFrame(Frame):
         #     Data.start_session_time = Data.start_session_time
         #     Data.end_session_time = Data.end_session_time
 
-        request(Orders.setNextSession, str(datetime.now().strftime(time_format)),
+        add_request(Orders.setNextSession, str(datetime.now().strftime(time_format)),
                 start=Data.start_session_time.strftime(time_format),
                 end=Data.end_session_time.strftime(time_format))
 
@@ -179,7 +181,7 @@ class ADCSFrame(Frame):
             str(Data.commands_counter), "ADCS", datetime.now().strftime("%d_%m_%Y %H-%M-%S"),
             Data.mission_entry.get(), "to angle"
         ))
-        request(Orders.controlSubsystem, '0', sys="ADCS", command='angle', x=self.x_entry.get(), y=self.y_entry.get())
+        add_request(Orders.controlSubsystem, '0', sys="ADCS", command='angle', x=self.x_entry.get(), y=self.y_entry.get())
 
     def on_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
@@ -187,7 +189,7 @@ class ADCSFrame(Frame):
             str(Data.commands_counter), "ADCS", datetime.now().strftime(time_format),
             Data.mission_entry.get(), "ON"
         ))
-        request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="ADCS", command="ON")
+        add_request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="ADCS", command="ON")
 
     def off_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
@@ -195,7 +197,7 @@ class ADCSFrame(Frame):
             str(Data.commands_counter), "ADCS", datetime.now().strftime(time_format),
             Data.mission_entry.get(), "OFF"
         ))
-        request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="ADCS", command="OFF")
+        add_request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="ADCS", command="OFF")
 
 
     def reset_button_clicked(self):
@@ -204,7 +206,7 @@ class ADCSFrame(Frame):
             str(Data.commands_counter), "ADCS", datetime.now().strftime(time_format),
             Data.mission_entry.get(), "RESET"
         ))
-        request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="ADCS", command="RESET")
+        add_request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="ADCS", command="RESET")
 
     def check_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
@@ -212,7 +214,7 @@ class ADCSFrame(Frame):
             str(Data.commands_counter), "ADCS", datetime.now().strftime(time_format),
             Data.mission_entry.get(), "Check status"
         ))
-        request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="ADCS", command="LIVE")
+        add_request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="ADCS", command="LIVE")
 
 
 class GPSFrame(Frame):
@@ -244,7 +246,7 @@ class GPSFrame(Frame):
             str(Data.commands_counter), "Telemetry", datetime.now().strftime(time_format),
             Data.mission_entry.get(), "ON"
         ))
-        request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="TT", command="ON")
+        add_request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="TT", command="ON")
 
     def off_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
@@ -252,7 +254,7 @@ class GPSFrame(Frame):
             str(Data.commands_counter), "Telemetry", datetime.now().strftime(time_format),
             Data.mission_entry.get(), "OFF"
         ))
-        request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="TT", command="OFF")
+        add_request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="TT", command="OFF")
 
     def reset_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
@@ -260,7 +262,7 @@ class GPSFrame(Frame):
             str(Data.commands_counter), "Telemetry", datetime.now().strftime(time_format),
             Data.mission_entry.get(), "RESET"
         ))
-        request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="TT", command="RESET")
+        add_request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="TT", command="RESET")
 
     def check_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
@@ -268,7 +270,7 @@ class GPSFrame(Frame):
             str(Data.commands_counter), "Telemetry", datetime.now().strftime(time_format),
             Data.mission_entry.get(), "Check status"
         ))
-        request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="TT", command="LIVE")
+        add_request(Orders.controlSubsystem, str(datetime.now().strftime(time_format)), sys="TT", command="LIVE")
 
 
 class OpenRealTimeFrame(Frame):
@@ -306,7 +308,7 @@ class OpenRealTimeFrame(Frame):
 
     def realtime_communication(self):
 
-        request(Orders.openRealTime, '0')
+        add_request(Orders.openRealTime, '0')
         try:
             receive_fromOBC()
         except:
@@ -337,10 +339,9 @@ class OpenRealTimeFrame(Frame):
 
         Data.commands_counter = Data.commands_counter + 1
         Data.command_list_table.insert(parent='', index='end', text='', values=(
-            str(Data.commands_counter), "close real time data", datetime.now().strftime("%d_%m_%Y %H-%M-%S"),
+            str(Data.commands_counter), "close real time data", datetime.now().strftime(time_format),
             Data.mission_entry.get(), " - "
         ))
-        print('converted to false')
         Data.realtime_bool = False
 
 
@@ -356,51 +357,83 @@ class StorageFrame(Frame):
         content_frame = Frame(self, bg="white")
         content_frame.pack(anchor="center", pady=20, fill="both", expand=1, padx=20)
 
+        # ---------------------------------
+
         image_lbl = Label(content_frame, text="Images", font=("Segoe UI Light", 20), background="white")
-        image_lbl.grid(row=0, column=0, padx=120)
+        image_lbl.grid(row=0, column=0, padx=0)
+
+        Data.image_prog = Progressbar(content_frame, orient='horizontal', mode='determinate', length=120, value=80)
+        Data.image_prog.grid(row=0, column=1, padx=5)
 
         Data.image_lbl_var = Label(content_frame, text="5 MB", font=("", 17, "bold"), background="white",
                               foreground="#000799")
-        Data.image_lbl_var.grid(row=0, column=1)
+        Data.image_lbl_var.grid(row=0, column=2)
 
         image_lbl2 = Label(content_frame, text="/ 5 GB", font=("", 14, "bold"), background="white")
-        image_lbl2.grid(row=0, column=2)
+        image_lbl2.grid(row=0, column=3)
+
+        # images_details = Label(content_frame, text="M: 30 img , E: 6000 img", font=("", 10), background="white",
+        #                       foreground="#000799")
+        # images_details.grid(row=0, column=4)
 
         # ---------------------------------
 
         videos_lbl = Label(content_frame, text="Videos", font=("Segoe UI Light", 20), background="white")
-        videos_lbl.grid(row=1, column=0, padx=120)
+        videos_lbl.grid(row=1, column=0, padx=0)
+
+        Data.videos_prog = Progressbar(content_frame, orient='horizontal', mode='determinate', length=120, value=1)
+        Data.videos_prog.grid(row=1, column=1, padx=5)
 
         Data.videos_lbl_var = Label(content_frame, text="5 MB ", font=("", 17, "bold"), background="white",
                               foreground="#000799")
-        Data.videos_lbl_var.grid(row=1, column=1)
+        Data.videos_lbl_var.grid(row=1, column=2)
 
         videos_lbl2 = Label(content_frame, text="/ 5 GB", font=("", 14, "bold"), background="white")
-        videos_lbl2.grid(row=1, column=2)
+        videos_lbl2.grid(row=1, column=3)
+
+        # videos_details = Label(content_frame, text="M: 3 min , E: 6.3 Hr", font=("", 10), background="white",
+        #                        foreground="#000799")
+        # videos_details.grid(row=1, column=4)
 
         # ---------------------------------
 
         telemetry_lbl = Label(content_frame, text="Telemetry", font=("Segoe UI Light", 20), background="white")
-        telemetry_lbl.grid(row=2, column=0, padx=120)
+        telemetry_lbl.grid(row=2, column=0, padx=0)
+
+        Data.telemetry_prog = Progressbar(content_frame, orient='horizontal', mode='determinate', length=120, value=1)
+        Data.telemetry_prog.grid(row=2, column=1, padx=5)
 
         Data.telemetry_var = Label(content_frame, text="5 MB", font=("", 17, "bold"), background="white",
                               foreground="#000799")
-        Data.telemetry_var.grid(row=2, column=1)
+        Data.telemetry_var.grid(row=2, column=2)
 
         telemetry2 = Label(content_frame, text="/ 5 GB", font=("", 14, "bold"), background="white")
-        telemetry2.grid(row=2, column=2)
+        telemetry2.grid(row=2, column=3)
+
+        # telemetry_details = Label(content_frame, text="M: 16 hr , E: 4.3 day", font=("", 10), background="white",
+        #                        foreground="#000799")
+        # telemetry_details.grid(row=2, column=4)
 
         # ---------------------------------
 
         logs_lbl = Label(content_frame, text="Logs", font=("Segoe UI Light", 20), background="white")
-        logs_lbl.grid(row=3, column=0, padx=120)
+        logs_lbl.grid(row=3, column=0, padx=0)
+
+        Data.logs_prog = Progressbar(content_frame, orient='horizontal', mode='determinate', length=120, value=10)
+        Data.logs_prog.grid(row=3, column=1, padx=5)
 
         Data.logs_lbl_var = Label(content_frame, text="5 MB", font=("", 17, "bold"), background="white",
                               foreground="#000799")
-        Data.logs_lbl_var.grid(row=3, column=1)
+        Data.logs_lbl_var.grid(row=3, column=2)
 
         logs_lbl2 = Label(content_frame, text="/ 5 GB", font=("", 14, "bold"), background="white")
-        logs_lbl2.grid(row=3, column=2)
+        logs_lbl2.grid(row=3, column=3)
+
+        # logs_details = Label(content_frame, text="M: 20 hr , E: 5 day", font=("", 10), background="white",
+        #                        foreground="#000799")
+        # logs_details.grid(row=3, column=4)
+
+        # ---------------------------------
 
         button = Button(self, text="List", font=("", 14, "bold"), command=self.list_button_click,
                         relief="flat")
@@ -415,13 +448,18 @@ class StorageFrame(Frame):
 
         video_size = str(int(jsn['Videos'])/1000)+' KB' if jsn['Videos'] < 1000000 else str(int(jsn['Videos']) /1000000) +' MB'
         telemetry_size = str(int(jsn['Telemtry'])/1000)+' KB' if jsn['Telemtry'] < 1000000 else str(int(jsn['Telemtry']) /1000000) +' MB'
-        logs_size = str(int(jsn['Logs'])/1000)+' KB' if jsn['Logs'] < 1000000 else str(int(jsn['Logs']) /1000000) +' MB'
+        logs_size = str(int(jsn['Logs'])/1000)+' KB' if jsn['Logs'] < 1000000 else str(int(jsn['Logs']) /1000000) + ' MB'
         image_size = str(int(jsn['Images'])/1000)+' KB' if jsn['Images'] < 1000000 else str(int(jsn['Images']) /1000000) +' MB'
 
         Data.image_lbl_var.config(text=image_size)
         Data.videos_lbl_var.config(text=video_size)
         Data.telemetry_var.config(text=telemetry_size)
         Data.logs_lbl_var.config(text=logs_size)
+
+        Data.image_prog.config(value=int(int(jsn['Images'])/1000000000))
+        Data.videos_prog.config(value=int(int(jsn['Videos'])/1000000000))
+        Data.telemetry_prog.config(value=int(int(jsn['Telemtry'])/1000000000))
+        Data.logs_prog.config(value=int(int(jsn['Logs'])/1000000000))
 
     def list_button_click(self):
         Data.commands_counter = Data.commands_counter + 1
@@ -429,22 +467,8 @@ class StorageFrame(Frame):
             str(Data.commands_counter), "Get Storage", datetime.now().strftime(time_format),
             Data.mission_entry.get(), " - "
         ))
-        _thread.start_new_thread(self.storage_thread, ())
+        add_request(Orders.getStorage, str(datetime.now().strftime(time_format)))
+        # _thread.start_new_thread(self.storage_thread, ())
 
-    def storage_thread(self):
-        request(Orders.getStorage, str(datetime.now().strftime(time_format)))
-        receive_fromOBC()
-        jsn = json.loads(Data.data_received)
-
-        image_size = str(int(jsn['Images'])/1000)+' KB' if jsn['Images'] < 1000000 else str(int(jsn['Images']) /1000000) +' MB'
-        video_size = str(int(jsn['Videos'])/1000)+' KB' if jsn['Videos'] < 1000000 else str(int(jsn['Videos']) /1000000) +' MB'
-        telemetry_size = str(int(jsn['Telemtry'])/1000)+' KB' if jsn['Telemtry'] < 1000000 else str(int(jsn['Telemtry']) /1000000) +' MB'
-        logs_size = str(int(jsn['Logs'])/1000)+' KB' if jsn['Logs'] < 1000000 else str(int(jsn['Logs']) /1000000) +' MB'
-
-        Data.image_lbl_var.config(text=image_size)
-        Data.videos_lbl_var.config(text=video_size)
-        Data.telemetry_var.config(text=telemetry_size)
-        Data.logs_lbl_var.config(text=logs_size)
-
-        for key, value in jsn.items():
-            Data.cache.add(key, value)
+    # def storage_thread(self):
+    #     add_request(Orders.getStorage, str(datetime.now().strftime(time_format)))

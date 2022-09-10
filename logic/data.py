@@ -61,10 +61,30 @@ class Data:
     # general
     statistics = {}
 
+
+    # lib
+    cache = None
+
     # statistics
     image_lbl_var = None
     videos_lbl_var = None
     telemetry_var = None
     logs_lbl_var = None
-    cache = Cache()
+
+    image_prog = None
+    videos_prog = None
+    telemetry_prog = None
+    logs_prog = None
+
+    # server
+    all_requests = []
+
+    # { order, atTime,
+    #  duration="0",
+    # x=0, y=0,
+    # name="none",
+    # command='none',
+    # sys="none",
+    # start='0', end=0 }
+
 

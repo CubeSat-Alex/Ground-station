@@ -89,7 +89,9 @@ class DataBase:
         self.connection.commit()
 
     def addLogs(self, logs):
-        data =logs.split('\n')
+
+        data = json.loads(logs).split('\n')
+        print(len(data))
        
         for index in range(len(data)):
             dictionary = {date: data[index].split(',')[0],

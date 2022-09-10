@@ -16,6 +16,35 @@ def start_server():
     print(Data.server.connect())
 
 
+def add_request(order, atTime,
+     duration="0",
+    x=0, y=0,
+    name="none",
+    command='none',
+    sys="none",
+    start='0', end=0):
+
+    req = {'order': order,
+           'atTime': atTime,
+           'duration': duration,
+           'x': x,
+           'y': y,
+           'name': name,
+           'command': command,
+           'sys': sys,
+           'start': start,
+           'end': end}
+
+    Data.all_requests.append(req)
+    # { order, atTime,
+    #  duration="0",
+    # x=0, y=0,
+    # name="none",
+    # command='none',
+    # sys="none",
+    # start='0', end=0 }
+
+
 def request(order, atTime,
             duration="0",
             x=0, y=0,
@@ -89,7 +118,6 @@ def stream_phone_thread_clicked():
 
 def get_telemetry():
 
-    request(Orders.getTelemetry, '')
     receive_fromOBC()
 
     Data.dataBase.addData(Data.data_received)
@@ -116,30 +144,50 @@ def get_telemetry():
     change_temp_figure(last30["tempreture"].tolist())
 
 
+def fill_table():
+    for i in Data.files_table.get_children():
+        Data.files_table.delete(i)
+
+    for i in range(len(Data.files)):
+        line = (Data.files[i].date,
+                Data.files[i].mission,
+                'video' if str(Data.files[i].path).find('.avi') != -1 else 'image',
+                Data.files[i].x + ", " + Data.files[i].y,
+                Data.files[i].duration)
+
+        Data.files_table.insert(parent='', index='end', text=Data.files[i].path, values=line)
+
+
 def get_saved_images():
 
-    request(Orders.getImages, "0")
     receive_fromOBC()
 
     print(Data.data_received)
     maap = json.loads(Data.data_received)
     for name in maap["imagesNames"]:
-        print(name)
-
         path = Data.server.getImage(str(name).replace(".jpg", ""))
         Data.current_image = ImageTk.PhotoImage(Image.open(path))
         Data.image_view.config(image=Data.current_image)
 
+    videos = getAllNames(videosFolder)
+    images = getAllNames(imageFolder)
+    Data.files = images + videos
+    fill_table()
+
 
 def get_saved_videos():
 
-    request(Orders.getVideos, "0")
     receive_fromOBC()
 
     print(Data.data_received)
     maap = json.loads(Data.data_received)
     for name in maap["VideosNames"]:
         Data.server.getVideo("output/videos/"+str(name))
+
+    videos = getAllNames(videosFolder)
+    images = getAllNames(imageFolder)
+    Data.files = images + videos
+    fill_table()
 
 
 def send_command_list():

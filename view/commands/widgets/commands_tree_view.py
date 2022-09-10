@@ -21,7 +21,7 @@ class TreeView(Frame):
         self.tree = Treeview(self, style="mystyle.Treeview", height=400, selectmode="extended")
         self.fill_tree(self.tree)
         self.tree.bind("<Double-1>", self.OnDoubleClick)
-        self.tree.pack(ipady=50, fill='y')
+        self.tree.pack(fill='y')
 
     def OnDoubleClick(self, event):
         item = self.tree.identify('item', event.x, event.y)
@@ -56,7 +56,7 @@ class TreeView(Frame):
 
     def fill_tree(self, tree):
         tree.heading('#0', text='Commands', anchor=W)
-        tree.column("#0", width=300)
+        tree.column("#0", width=200)
         # adding data
         tree.insert('', END, text='Direct', open=True, iid='direct')
         tree.insert('', END, text='Play Back', open=True, iid='play-back')

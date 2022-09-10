@@ -1,7 +1,6 @@
 import pickle
 import socket
 import struct
-from datetime import datetime
 from logic.data import Data
 
 
@@ -41,12 +40,15 @@ class Server:
         data = b""
         payload_size = struct.calcsize("Q")
         fourcc = Data.cv.VideoWriter_fourcc(*'XVID')
-        # out = Data.cv.VideoWriter(fileName, fourcc, 24.0, (320, 240))
+        out = Data.cv.VideoWriter(fileName, fourcc, 24.0, (320, 240))
+
+        frames_counter = 0
 
         while True:
             while len(data) < payload_size:
                 packet = self.client.recv(64 * 1024)  # 4K
-                if not packet: break
+                if not packet:
+                    break
                 data += packet
             packed_msg_size = data[:payload_size]
             data = data[payload_size:]
@@ -59,21 +61,26 @@ class Server:
             frame_data = data[:msg_size]
             data = data[msg_size:]
             if len(data) < payload_size:
-                # print("here")
-                # out.release()
-                # Data.cv.destroyAllWindows()
+                print("here")
+                out.release()
+                Data.cv.destroyAllWindows()
                 break
 
             # frame = Data.cv.cvtColor(pickle.loads(frame_data), Data.cv.COLOR_BGR2RGB)
             frame = pickle.loads(frame_data)
 
-            # out.write(frame)
+            frames_counter = frames_counter + 1
+
+            out.write(frame)
 
             # self.photo = ImageTk.PhotoImage(image=Image.fromarray(frame))
             # canvas.itemconfig(self.image_on_canvas, image=self.photo)
 
-            Data.cv.imshow("RECEIVING VIDEO", frame)
+            # Data.cv.imshow("RECEIVING VIDEO", frame)
             Data.cv.waitKey(1)
+
+        print('frames : ')
+        print(frames_counter)
 
     def getImage(self, name):
         data = b""
@@ -99,7 +106,6 @@ class Server:
         print(path)
         Data.cv.imwrite(path, frame)
         return path
-
 
     def closeConn(self):
         self.client.close()

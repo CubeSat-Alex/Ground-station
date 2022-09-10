@@ -4,6 +4,7 @@ from tkinter import messagebox
 import time
 from logic.data import Data
 from logic.functions.server import start_server
+from logic.shared_prefrence import Cache
 from model.database import DataBase
 from model.gallery_logic import *
 from model.ssp import *
@@ -70,6 +71,7 @@ def initial_setup(root):
     Data.ssp = SSP()
     Data.cv = cv2
     Data.dataBase = DataBase()
+    Data.cache = Cache()
     initial_files()
     _thread.start_new_thread(start_server, ())
 

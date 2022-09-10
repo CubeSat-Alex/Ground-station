@@ -91,9 +91,11 @@ class DownloadsPage(Page):
             Data.files_table.delete(i)
 
         for i in range(len(Data.files)):
-            line = (Data.files[i].date, Data.files[i].mission,
-                    'video' if str(Data.files[i].mission).find('avi') else 'image',
-                    Data.files[i].x + ", " + Data.files[i].y, Data.files[i].duration)
+            line = (Data.files[i].date,
+                    Data.files[i].mission,
+                    'video' if str(Data.files[i].path).find('.avi') != -1 else 'image',
+                    Data.files[i].x + ", " + Data.files[i].y,
+                    Data.files[i].duration)
 
             Data.files_table.insert(parent='', index='end', text=Data.files[i].path, values=line)
 
@@ -113,5 +115,6 @@ class DownloadsPage(Page):
             self.play_video(Data.files_table.item(item, 'text'))
         else:
             # play image
-            pass
+            self.new_image = PhotoImage(file=Data.files_table.item(item, 'text'))
+            self.player.config(image=self.new_image)
 

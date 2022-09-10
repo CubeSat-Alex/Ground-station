@@ -1,7 +1,10 @@
 from tkinter import *
 import ctypes as ct
+import customtkinter
+
 from logic.functions.general import window_dispose, initial_setup
 from view.main_view import MainView
+
 
 # version
 def dark_title_bar(window):
@@ -16,11 +19,18 @@ def dark_title_bar(window):
     set_window_attribute(hwnd, rendering_policy, ct.byref(value),
                          ct.sizeof(value))
 
+
+customtkinter.set_appearance_mode("Dark")  # Modes: system (default), light, dark
+customtkinter.set_default_color_theme("blue")  # Themes: blue (default), dark-blue, green
+customtkinter.set_window_scaling(0.2)
+customtkinter.set_widget_scaling(0.2)
+
+# root = customtkinter.CTk()
 root = Tk()
 initial_setup(root)
 main = MainView(root)
 main.pack(side="top", fill="both", expand=True)
-# root.wm_geometry("1600x900+180+50")
+root.wm_geometry("1600x900+180+50")
 root.state('zoomed')
 root.title('Cube Satellite Station')
 root.config(bg="#002B5B")
