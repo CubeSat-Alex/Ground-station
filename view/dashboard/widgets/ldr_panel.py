@@ -4,7 +4,7 @@ import numpy as np
 
 
 class LDRPanel(Frame):
-    ldr_list = [0, 0, 100, 200]
+    ldr_list = [150, 30, 10, 0]
     val = 0
 
     def __init__(self, *args):

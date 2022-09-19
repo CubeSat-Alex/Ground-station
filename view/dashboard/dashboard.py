@@ -30,11 +30,11 @@ class Dashboard(Page):
         Data.acceleration_Card = Card("Acceleration", "22.5", [330, 323, 323, 353, 300], cards_frame)
         Data.ldr_panel = LDRPanel(right_top_frame)
         Data.satellite_orbit = SatelliteOrbit(right_top_frame)
-        # Data.Map = MapCard(right_frame, lat=30.057236, long=31.323368)
+        Data.Map = MapCard(right_frame, lat=31.323368, long=30.057236)
 
         last30 = Data.dataBase.getLast30()
 
-        # change_location(last30["lang"].tolist()[0], last30["lat"].tolist()[0])
+        change_location(last30["lang"].tolist()[0], last30["lat"].tolist()[0])
         change_acceleration_figure(last30["acceleration"].tolist())
         change_pressure_figure(last30["pressure"].tolist())
         change_temp_figure(last30["tempreture"].tolist())
@@ -54,4 +54,4 @@ class Dashboard(Page):
 
         Data.ldr_panel.pack(side="right", padx=10)
         Data.satellite_orbit.pack(side="right", padx=10)
-        # Data.Map.pack(side="right", padx=10, fill="y")
+        Data.Map.pack(side="right", padx=10, fill="y")

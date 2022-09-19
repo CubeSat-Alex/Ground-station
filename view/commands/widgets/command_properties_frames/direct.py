@@ -99,7 +99,8 @@ class SetSessionTimeFrame(Frame):
         long_term.pack(side="left", fill="x")
 
         list_long_term = Button(bottom_frame, text="  list  + ",
-                                   font=("", 14, "bold"), bg='white', command=self.setup_long_term_click, relief="flat", padx=20)
+                                font=("", 14, "bold"), bg='white', command=self.setup_long_term_click, relief="flat",
+                                padx=20)
         list_long_term.pack(side="left")
 
         button = Button(content_frame, text="List", font=("", 14, "bold"), command=self.set_time_button_clicked,
@@ -274,6 +275,13 @@ class OpenRealTimeFrame(Frame):
         content_frame = Frame(self, bg="white")
         content_frame.pack(anchor="center", pady=20, fill="both", expand=1)
 
+        duration_lbl = Label(self, text="Time Interval in seconds", font=("", 14, "bold"), relief="flat", bg='white')
+
+        self.duration_entry = Entry(self, font=("", 14, "bold"))
+
+        self.duration_entry.pack(side="bottom", fill="x")
+        duration_lbl.pack(side="bottom", fill="x", pady=30)
+
         button = Button(self, text="Open real time data transfer", font=("", 14, "bold"),
                         command=self.open_real_time_button_clicked,
                         relief="flat")
@@ -284,6 +292,8 @@ class OpenRealTimeFrame(Frame):
                         relief="flat")
         button.pack(side="bottom", fill="x")
 
+        # self.duration_entry.
+
     def open_real_time_button_clicked(self):
         Data.commands_counter = Data.commands_counter + 1
         Data.command_list_table.insert(parent='', index='end', text='', values=(
@@ -292,7 +302,7 @@ class OpenRealTimeFrame(Frame):
         ))
         # _thread.start_new_thread(self.realtime_communication, ())
         Data.realtime_bool = True
-        self.after(3000, self.realtime_communication)
+        self.after(500, self.realtime_communication)
 
     def realtime_communication(self):
         request(Orders.openRealTime, '0')
@@ -300,7 +310,7 @@ class OpenRealTimeFrame(Frame):
             receive_fromOBC()
         except:
             if Data.realtime_bool:
-                self.after(3000, self.realtime_communication)
+                self.after(int(self.duration_entry.get()) * 1000, self.realtime_communication)
             return
         st = json.loads(str(Data.data_received).strip())
 
@@ -320,7 +330,7 @@ class OpenRealTimeFrame(Frame):
         ))
 
         if Data.realtime_bool:
-            self.after(3000, self.realtime_communication)
+            self.after(int(self.duration_entry.get()) * 1000, self.realtime_communication)
 
     def close_real_time_button_clicked(self):
 

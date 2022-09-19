@@ -13,8 +13,8 @@ class CameraView(Frame):
     def __init__(self, *args):
         Frame.__init__(self, *args)
 
-        camera_view_frame = Frame(self, bg="white")
-        camera_view_buttons_frame = Frame(camera_view_frame, bg="white")
+        camera_view_frame = Frame(self)
+        camera_view_buttons_frame = Frame(camera_view_frame)
         # Data.video_frame = Frame(camera_view_frame, bg="white")
 
         #         --------- Elements -----------
@@ -30,6 +30,7 @@ class CameraView(Frame):
         self.stop_image = PhotoImage(file="images/stop.png")
         stop_streem_button = Button(camera_view_buttons_frame, text="   Stop", image=self.stop_image, compound="left",
                                     relief="flat", command=self.stop_button_clicked)
+
         self.camera_icon = PhotoImage(file="images/camera.png")
         capture_image_button = Button(camera_view_buttons_frame, text="   Capture", image=self.camera_icon, compound="left",
                                             relief="flat", command=self.capture_button_clicked)

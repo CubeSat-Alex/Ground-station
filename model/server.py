@@ -110,7 +110,7 @@ class Server:
             # canvas.itemconfig(self.image_on_canvas, image=self.photo)
 
             if stream:
-                Data.cv.imshow("RECEIVING VIDEO", frame)
+                Data.cv.imshow("Broadcasting", frame)
             Data.cv.waitKey(1)
 
 
