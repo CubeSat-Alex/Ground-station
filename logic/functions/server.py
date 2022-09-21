@@ -65,14 +65,17 @@ def request(order, atTime = datetime.now().strftime(time_format),
 
     jsonData = json.dumps(data)
     print(jsonData)
+    print(data['order'])
     packet = Data.ssp.data2Packet(jsonData, Address.OBC, Type.Read)
     Data.server.senData(packet)
-    print(packet)
+    # print(packet)
 
 
 def receive_fromOBC():
 
+    # Data.realtime_bool_temp = False
     arr2 = ''
+    # break_counter = 0
     while True:
         end_text = Data.server.recieveData()
         print(end_text)
@@ -83,7 +86,8 @@ def receive_fromOBC():
             break
         else:
             print("Not found!")
-            # if str(end_text).strip() == '':
+            # break_counter = break_counter + 1
+            # if break_counter > 20 :
             #     break
 
         arr2 = arr2 + str(end_text)
@@ -92,25 +96,28 @@ def receive_fromOBC():
     packet = Data.ssp.packet2data(arr)
     print(packet)
     Data.data_received = packet
+    # Data.realtime_bool_temp = True
 
 
 def capture_thread_clicked():
 
     request(Orders.capture, "0")
-    path = Data.server.getImage(str(datetime.now().strftime(time_format)))
-    Data.current_image = ImageTk.PhotoImage(Image.open(path))
+    path = Data.server.getImage(str(datetime.now().strftime('%d-%m-%Y-%H-%M-%S')), save=False)
+    Data.current_image = ImageTk.PhotoImage(Image.open(path).resize((1000, 1000)))
     Data.image_view.config(image=Data.current_image)
 
 
 def stream_thread_clicked():
 
     Data.timer.cancel()
+    Data.realtime_bool_temp = False
 
     request(Orders.getStream, "0")
     Data.server.getVideo("output/videos/"+str(datetime.now().strftime(time_format) + ".avi"), True)
 
     Data.timer = Timer(2, Data.server.bicon)
     Data.timer.start()
+    Data.realtime_bool_temp = True
 
 
 def stream_phone_thread_clicked():
@@ -129,6 +136,9 @@ def get_telemetry():
     receive_fromOBC()
     time_1 = datetime.now()
 
+    if Data.data_received == '{}':
+        return
+
     Data.dataBase.addData(Data.data_received)
 
     data = Data.dataBase.getData()
@@ -139,11 +149,17 @@ def get_telemetry():
         Data.data_table.delete(i)
 
     for i in range(data.shape[0]):
-        line = (data["date"][i], data["tempreture"][i], data["pressure"][i], data["acceleration"][i],
-                "X: " + str(data["angleX"][i]) + "Y: " + str(data["angleY"][i]) + "Z: " + str(data["angleZ"][i]),
+        date_parts = str(data["date"][i]).split('-')
+        line = (date_parts[0].replace('/', '-')+'\n   '+date_parts[1].replace('.', ':'),
+                data["tempreture"][i], data["pressure"][i], data["acceleration"][i],
+                "X: " + str(data["angleX"][i])
+                    + "\nY: " + str(data["angleY"][i])
+                    + "\nZ: " + str(data["angleZ"][i]),
                 data["altitude"][i],
-                "F:" + str(data["ldr1"][i]) + "B:" + str(data["ldr2"][i]) + "R:" + str(data["ldr3"][i]) + "L:" + str(
-                    data["ldr4"][i]))
+                "F:" + str(data["ldr1"][i])
+                    + ",  B:" + str(data["ldr2"][i])
+                    + "\nR:" + str(data["ldr3"][i])
+                    + ",  L:" + str(data["ldr4"][i]))
 
         Data.data_table.insert(parent='', index='end', text='', values=line)
 
@@ -170,7 +186,6 @@ def fill_table():
 
 
 def get_saved_images():
-
     receive_fromOBC()
 
     print(Data.data_received)
@@ -189,6 +204,8 @@ def get_saved_images():
 def get_saved_videos():
 
     Data.timer.cancel()
+    Data.realtime_bool_temp = False
+
     receive_fromOBC()
     print(Data.data_received)
 
@@ -206,6 +223,7 @@ def get_saved_videos():
 
     Data.timer = Timer(2, Data.server.bicon)
     Data.timer.start()
+    Data.realtime_bool_temp = True
 
 
 def send_command_list():

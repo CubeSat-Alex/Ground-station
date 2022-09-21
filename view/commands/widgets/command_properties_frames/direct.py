@@ -278,6 +278,7 @@ class OpenRealTimeFrame(Frame):
         duration_lbl = Label(self, text="Time Interval in seconds", font=("", 14, "bold"), relief="flat", bg='white')
 
         self.duration_entry = Entry(self, font=("", 14, "bold"))
+        self.duration_entry.insert(0, '5')
 
         self.duration_entry.pack(side="bottom", fill="x")
         duration_lbl.pack(side="bottom", fill="x", pady=30)
@@ -300,37 +301,9 @@ class OpenRealTimeFrame(Frame):
             str(Data.commands_counter), "open real time communication", datetime.now().strftime(time_format),
             Data.mission_entry.get(), " - "
         ))
-        # _thread.start_new_thread(self.realtime_communication, ())
-        Data.realtime_bool = True
-        self.after(500, self.realtime_communication)
 
-    def realtime_communication(self):
-        request(Orders.openRealTime, '0')
-        try:
-            receive_fromOBC()
-        except:
-            if Data.realtime_bool:
-                self.after(int(self.duration_entry.get()) * 1000, self.realtime_communication)
-            return
-        st = json.loads(str(Data.data_received).strip())
-
-        temp = str(st['TT']['T'])
-        pressure = str(st['TT']['P'])
-        acceleration = str(st['ADCS']['A'])
-        angle = str(st['TT']['X']) + ', ' + str(st['TT']['Y'])
-        altitude = str(st['TT']['A'])
-
-        ldr1 = str(st['TT']['LDR1'])
-        ldr2 = str(st['TT']['LDR2'])
-        ldr3 = str(st['TT']['LDR3'])
-        ldr4 = str(st['TT']['LDR4'])
-
-        Data.realtime_table.insert(parent='', index='end', text='', values=(
-            datetime.now().strftime(time_format), temp, pressure, acceleration, angle, altitude, ldr1, ldr2, ldr3, ldr4
-        ))
-
-        if Data.realtime_bool:
-            self.after(int(self.duration_entry.get()) * 1000, self.realtime_communication)
+        add_request(Orders.openRealTime, str(datetime.now().strftime(time_format)))
+        Data.realtime_duration = self.duration_entry.get()
 
     def close_real_time_button_clicked(self):
 
@@ -339,7 +312,7 @@ class OpenRealTimeFrame(Frame):
             str(Data.commands_counter), "close real time data", datetime.now().strftime(time_format),
             Data.mission_entry.get(), " - "
         ))
-        Data.realtime_bool = False
+        add_request('close', str(datetime.now().strftime(time_format)))
 
 
 class StorageFrame(Frame):

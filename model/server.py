@@ -1,11 +1,9 @@
-import _thread
 import json
 import pickle
 import socket
 import struct
 from datetime import datetime
 from threading import Timer
-
 from logic.constant.orders import Orders
 from logic.data import Data
 from model.ssp import *
@@ -37,6 +35,8 @@ class Server:
 
     def senData(self, data):
         Data.timer.cancel()
+        Data.realtime_bool_temp = False
+
         try:
             self.client.send(','.join([str(elem).strip() for elem in data]).encode())
             print("SEND SUCCESSFULLY")
@@ -45,9 +45,10 @@ class Server:
             # _thread.start_new_thread(self.reconnect, ())
         Data.timer = Timer(2, Data.server.bicon)
         Data.timer.start()
+        Data.realtime_bool_temp = True
 
     def bicon(self):
-
+        # pass
         data = {
             'order': Orders.ping,
             'args': {},
@@ -63,7 +64,7 @@ class Server:
             print("reconnecting in process")
             self.connect()
 
-        Data.timer = Timer(2, Data.server.bicon)
+        Data.timer = Timer(5, Data.server.bicon)
         Data.timer.start()
 
     def getVideo(self, fileName, stream):
@@ -72,7 +73,7 @@ class Server:
         data = b""
         payload_size = struct.calcsize("Q")
         fourcc = Data.cv.VideoWriter_fourcc(*'XVID')
-        out = Data.cv.VideoWriter(fileName, fourcc, 24.0, (320, 240))
+        out = Data.cv.VideoWriter(fileName, fourcc, 20, (320, 240))
 
         frames_counter = 0
 
@@ -103,6 +104,7 @@ class Server:
             frames_counter = frames_counter + 1
             print(f' time : {datetime.now()}, frame : {frames_counter}')
             frame = pickle.loads(frame_data)
+            frame = Data.cv.rotate(frame, Data.cv.ROTATE_180)
 
             out.write(frame)
 
@@ -113,9 +115,8 @@ class Server:
                 Data.cv.imshow("Broadcasting", frame)
             Data.cv.waitKey(1)
 
-
-    def getImage(self, name):
-        Data.timer.cancel()
+    def getImage(self, name, save=True):
+        # Data.timer.cancel()
 
         data = b""
         payload_size = struct.calcsize("Q")
@@ -137,12 +138,19 @@ class Server:
         if len(data) < payload_size:
             print("rr")
         frame = pickle.loads(frame_data)
-        path = "output/images/" + name + ".png"
+        frame = Data.cv.rotate(frame, Data.cv.ROTATE_180)
+
+        path = ''
+        if save:
+            path = "output/images/" + name + ".png"
+        else:
+            path = "capture_images/" + name + ".png"
+
         print(path)
         Data.cv.imwrite(path, frame)
 
-        Data.timer = Timer(2, Data.server.bicon)
-        Data.timer.start()
+        # Data.timer = Timer(2, Data.server.bicon)
+        # Data.timer.start()
 
         return path
 

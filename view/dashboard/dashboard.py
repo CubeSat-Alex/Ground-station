@@ -34,7 +34,7 @@ class Dashboard(Page):
 
         last30 = Data.dataBase.getLast30()
 
-        change_location(last30["lang"].tolist()[0], last30["lat"].tolist()[0])
+        # change_location(last30["lang"].tolist()[0], last30["lat"].tolist()[0])
         change_acceleration_figure(last30["acceleration"].tolist())
         change_pressure_figure(last30["pressure"].tolist())
         change_temp_figure(last30["tempreture"].tolist())

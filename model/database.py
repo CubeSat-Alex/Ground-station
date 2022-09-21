@@ -110,6 +110,7 @@ class DataBase:
 
     def addData(self, data):
         data = json.loads(str(data))
+
         accelerationFile = data["acceleration"].split('\n')
         pressureFile = data["pressure"].split('\n')
         angleFile = data["angle"].split('\n')

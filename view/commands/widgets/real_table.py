@@ -1,7 +1,6 @@
 from tkinter import *
 from tkinter.ttk import Treeview, Style
 from logic.data import Data
-from datetime import datetime
 
 
 class RealtimeTable(Frame):
@@ -46,11 +45,11 @@ class RealtimeTable(Frame):
         Data.realtime_table.heading("RLDR", text="RLDR", anchor=CENTER)
         Data.realtime_table.heading("LLDR", text="LLDR", anchor=CENTER)
 
-        Data.realtime_table.insert(parent='', index='end', text='', values=(
-            datetime.now(), "25", "12", "333.0", "45,60", 1500, "200", "200", "200", "200"
-        ))
-        Data.realtime_table.insert(parent='', index='end', text='', values=(
-            datetime.now(), "33", "18", "278.0", "45,50", 1500, "44", "200", "200", "200"
-        ))
+        # Data.realtime_table.insert(parent='', index='end', text='', values=(
+        #     datetime.now(), "25", "12", "333.0", "45,60", 1500, "200", "200", "200", "200"
+        # ))
+        # Data.realtime_table.insert(parent='', index='end', text='', values=(
+        #     datetime.now(), "33", "18", "278.0", "45,50", 1500, "44", "200", "200", "200"
+        # ))
 
         Data.realtime_table.pack()

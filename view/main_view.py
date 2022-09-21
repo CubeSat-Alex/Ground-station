@@ -30,10 +30,10 @@ class MainView(Frame):
         container = Frame(self)
         Data.header_timer_frame = Frame(bottom_navigation_bar, background="#277BC0")
 
-        self.logo = PhotoImage(file="images/EgsaLogo.png").subsample(2, 2)
-        self.logo_lbl = Label(image=self.logo, bg="white")
-        self.dashboard_lbl = Label(text="Dashboard", bg="white", font=("Segoe UI", 30, "bold"),
-                                   background="white")
+        # self.logo = PhotoImage(file="images/EgsaLogo.png").subsample(2, 2)
+        # self.logo_lbl = Label(image=self.logo, bg="white")
+        # self.dashboard_lbl = Label(text="Dashboard", bg="white", font=("Segoe UI", 30, "bold"),
+        #                            background="white")
 
         #         --------- Elements -----------
 
@@ -92,7 +92,7 @@ class MainView(Frame):
         Data.data_timer_number_lbl.pack(side="right", expand=1, fill="x")
         Data.data_timer_lbl.pack(side="left")
 
-        self.logo_lbl.place(x=900, y=5)
+        # self.logo_lbl.place(x=900, y=5)
 
     def clear_button_color(self):
         self.dashboard_button.config(bg=color_deselect)

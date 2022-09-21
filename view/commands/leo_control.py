@@ -35,6 +35,9 @@ class Control(Page):
         Data.mission_entry.insert(0, "General Mission")
         Label(mission_name_frame, text=" Mission Name: ", bg="red", font=("Segoe UI", 14), foreground='white').pack(side="top",ipady=300, pady=300)
 
+        Data.overlay_lbl = Label(bottom_frame, text='Ready', font=('', 16), bg='#54FA9B')
+        Data.overlay_lbl.pack(side='top', fill='x')
+
         #         --------- packing -----------
         right_frame.pack(side="right", fill="y")
         left_frame.pack(side="left", fill="y")

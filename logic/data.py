@@ -1,7 +1,4 @@
 from datetime import datetime, timedelta
-from threading import Timer
-
-from logic.shared_prefrence import Cache
 
 
 class Data:
@@ -22,8 +19,8 @@ class Data:
     end_button = None
     start_button = None
 
-    start_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 12, 7, 00)
-    end_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 12, 10, 00)
+    start_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 8, 7, 00)
+    end_session_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, 20, 10, 00)
     duration_until_bext_session = timedelta(20, 20, 20)
     repeater_session = None
     execution_time = datetime(datetime.now().year, datetime.now().month, datetime.now().day, datetime.now().hour,
@@ -51,6 +48,7 @@ class Data:
     commands_frames = {}
     commands_counter = 0
     realtime_bool = False
+    realtime_bool_temp = False
 
     # Long term plan
     long_term_plan_map = []
@@ -64,9 +62,7 @@ class Data:
 
     # lib
     cache = None
-
     timer = None
-
     connectFlag = True
 
     # statistics
@@ -90,5 +86,8 @@ class Data:
     # command='none',
     # sys="none",
     # start='0', end=0 }
+    realtime_duration = '3'
+    overlay_lbl = None
+
 
 

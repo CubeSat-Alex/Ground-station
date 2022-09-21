@@ -1,8 +1,5 @@
 import _thread
-import json
 from tkinter import *
-from logic.functions.general import *
-from logic.constant.orders import *
 from logic.functions.server import *
 from model.ssp import *
 from model.gif import GifPlay
@@ -54,8 +51,8 @@ class CameraView(Frame):
 
         #         --------- start run -----------
 
-        self.gif = GifPlay(Data.image_view, 'images/satelite_motion.gif', 0.1)
-        self.gif.start()
+        # self.gif = GifPlay(Data.image_view, 'images/satelite_motion.gif', 0.2)
+        # self.gif.start()
 
     def start_button_clicked(self):
         # self.gif.start()
